@@ -42,14 +42,25 @@ const createUserWithEmployee = async ({
     err.statusCode = 409;
     throw err;
   }
+  
+  // Bootstrap the system
+  const userCount = await User.countDocuments();
+
+  const isFirstuser = userCount === 0;
 
   const createdUser = await User.create({
     firstName,
     lastName,
     email,
     password,
-    role,
-    status,
+
+    role: isFirstuser ? 'superuser' : role,
+
+    status: isFirstuser ? 'APPROVED' : status,
+
+    isSystem: isFirstuser,
+
+    protectedAccount: isFirstuser,
   });
 
   await Employee.create({
@@ -83,7 +94,6 @@ exports.register = async (req, res, next) => {
       lastName,
       email,
       password,
-      role: 'employee',
       department,
       position,
       phone,
@@ -95,8 +105,39 @@ exports.register = async (req, res, next) => {
     await user.save({
       validateBeforeSave: false,
     });
+    
+    // Only automatically login approved users
+    if (user.status === 'APPROVED') {
+      
+      const token = signToken({
+        id: user._id,
+        role: user.role,
+      });
 
-    sendAuth(user, 201, res);
+      const safeUser = user.toObject();
+
+      delete safeUser.password;
+
+      return res.status(201).json({
+        success: true,
+        message: 'System initialized successfully.',
+        data: {
+          approved: true,
+          token,
+          user: safeUser,
+        },
+      });
+
+    }
+
+    return res.status(210).json({
+      success: true,
+      mesage: 'Registration successful. Your account is awaiting administrator approval.',
+      data: {
+        approved: false,
+      },
+      
+    });
 
   } catch (err) {
     next(err);
@@ -175,6 +216,13 @@ exports.login = async (req, res, next) => {
 exports.getMe = async (req, res, next) => {
   try {
 
+    if (req.user.status !== 'APPROVED') {
+      return res.status(403).json({
+        success: false,
+        message: 'Account not approved.',
+      });
+    }
+
     const employee = await Employee.findOne({
       user: req.user._id,
     });
@@ -186,17 +234,6 @@ exports.getMe = async (req, res, next) => {
         employee,
       },
     });
-
-    if (
-      req.user.status !==
-      'APPROVED'
-    ) {
-      return res.status(403).json({
-        success: false,
-        message:
-          'Account not approved.',
-      });
-    }
 
   } catch (err) {
     next(err);
@@ -221,6 +258,7 @@ exports.registerAdmin = async (req, res, next) => {
     } = req.body;
 
     const allowedRoles = [
+      'employee',
       'manager',
       'hr',
       'admin',

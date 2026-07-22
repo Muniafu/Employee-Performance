@@ -1,635 +1,560 @@
-const mongoose = require('mongoose');
 const Payroll = require('../models/Payroll');
 const Employee = require('../models/Employee');
-const { calculatePayroll } = require('../services/payrollCalculationService');
-const { dispatchNotification } = require('../services/notificationOrchestrator');
-const { templates } = require('../utils/emailService');
 
-const currentPeriod =
-() => {
+const PayrollEngine = require('../services/payroll/payrollEngine');
+const PayrollBatchService = require('../services/payroll/payrollBatchService');
 
-const d =
-new Date();
+const asyncHandler = require('../middleware/asyncHandler');
+const Response = require('../utils/responseHandler');
 
-return `${d.getFullYear()}-${String(
-d.getMonth()+1
-).padStart(
-2,
-'0'
-)}`;
+class PayrollController {
 
-};
+    /*
+    =====================================================
+    Preview Payroll
+    =====================================================
+    */
 
-const snapshot =
-(employee)=>({
+    static preview = asyncHandler(async (req, res) => {
 
-employeeId:
-employee.employeeId,
+        const {
+            payrollPeriodId,
+            employeeId,
+        } = req.body;
 
-firstName:
-employee.user.firstName,
+        const result =
+            await PayrollBatchService.preview(
+                payrollPeriodId,
+                employeeId
+            );
 
-lastName:
-employee.user.lastName,
+        return Response.success(
+            res,
+            result,
+            'Payroll preview generated successfully.'
+        );
 
-department:
-employee.department,
+    });
 
-position:
-employee.position,
+    /*
+    =====================================================
+    Finalize Payroll
+    =====================================================
+    */
 
-salary:
-employee.salary,
+    static finalize = asyncHandler(async (req, res) => {
 
-currency:
-employee.currency,
+        const {
+            payrollPeriodId,
+        } = req.body;
 
-});
+        const result =
+            await PayrollBatchService.finalize(
+                payrollPeriodId,
+                req.user.id
+            );
 
-// PREVIEW
+        return Response.created(
+            res,
+            result,
+            'Payroll generated successfully.'
+        );
 
-exports.preview =
-async(
-req,
-res,
-next
-)=>{
+    });
 
-try{
+    /*
+    =====================================================
+    Logged In Employee Payroll
+    =====================================================
+    */
 
-const {
-employeeId,
-period,
-}=req.body;
+    static getMyPayroll = asyncHandler(async (req, res) => {
 
-const target=
-period||
-currentPeriod();
+        const employee =
+            await Employee.findOne({
+                user: req.user.id,
+            });
 
-const employee=
-await Employee
-.findById(
-employeeId
-)
-.populate(
-'user',
-'firstName lastName email status'
-);
+        if (!employee) {
+            return Response.notFound(
+                res,
+                'Employee profile not found.'
+            );
+        }
 
-if(
-!employee
-){
+        const payrolls =
+            await Payroll.find({
 
-return res
-.status(404)
-.json({
-success:false,
-message:
-'Employee not found',
-});
+                employee:
+                    employee._id,
 
+            })
+
+            .populate(
+                'payrollPeriod'
+            )
+
+            .sort({
+                createdAt: -1,
+            });
+
+        return Response.success(
+            res,
+            payrolls
+        );
+
+    });
+
+    /*
+    =====================================================
+    All Payroll
+    =====================================================
+    */
+
+    static getAll = asyncHandler(async (req, res) => {
+
+        const payrolls =
+            await Payroll.find()
+
+            .populate({
+
+                path: 'employee',
+
+                populate: {
+                    path: 'user',
+                    select:
+                        'firstName lastName email',
+                },
+
+            })
+
+            .populate('payrollPeriod')
+
+            .sort({
+                createdAt: -1,
+            });
+
+        return Response.success(
+            res,
+            payrolls
+        );
+
+    });
+
+    /*
+    =====================================================
+    Single Payroll
+    =====================================================
+    */
+
+    static getOne = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            )
+
+            .populate({
+
+                path: 'employee',
+
+                populate: {
+                    path: 'user',
+                },
+
+            })
+
+            .populate(
+                'payrollPeriod'
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        return Response.success(
+            res,
+            payroll
+        );
+
+    });
+
+    /*
+    =====================================================
+    Review Payroll
+    =====================================================
+    */
+
+    static review = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        payroll.workflow.employeeStatus =
+            'review';
+
+        payroll.workflow.reviewedBy =
+            req.user.id;
+
+        payroll.workflow.reviewedAt =
+            new Date();
+
+        payroll.auditTrail.push({
+
+            action:
+                'Payroll Reviewed',
+
+            performedBy:
+                req.user.id,
+
+            remarks:
+                req.body.remarks || '',
+
+        });
+
+        await payroll.save();
+
+        return Response.success(
+            res,
+            payroll,
+            'Payroll moved for review.'
+        );
+
+    });
+
+    /*
+    =====================================================
+    Approve Payroll
+    =====================================================
+    */
+
+    static approve = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        payroll.workflow.employeeStatus =
+            'approved';
+
+        payroll.workflow.approvedBy =
+            req.user.id;
+
+        payroll.workflow.approvedAt =
+            new Date();
+
+        payroll.auditTrail.push({
+
+            action:
+                'Payroll Approved',
+
+            performedBy:
+                req.user.id,
+
+            remarks:
+                req.body.remarks || '',
+
+        });
+
+        await payroll.save();
+
+        return Response.success(
+            res,
+            payroll,
+            'Payroll approved.'
+        );
+
+    });
+
+    /*
+    =====================================================
+    Lock Payroll
+    =====================================================
+    */
+
+    static lock = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        payroll.workflow.employeeStatus =
+            'locked';
+
+        payroll.workflow.lockedBy =
+            req.user.id;
+
+        payroll.workflow.lockedAt =
+            new Date();
+
+        payroll.auditTrail.push({
+
+            action:
+                'Payroll Locked',
+
+            performedBy:
+                req.user.id,
+
+        });
+
+        await payroll.save();
+
+        return Response.success(
+            res,
+            payroll,
+            'Payroll locked.'
+        );
+
+    });
+
+    /*
+    =====================================================
+    Mark Paid
+    =====================================================
+    */
+
+    static markPaid = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        payroll.workflow.employeeStatus =
+            'paid';
+
+        payroll.payment.paymentStatus =
+            'paid';
+
+        payroll.payment.paymentMethod =
+            req.body.paymentMethod;
+
+        payroll.payment.paymentReference =
+            req.body.paymentReference;
+
+        payroll.payment.paymentDate =
+            new Date();
+
+        payroll.auditTrail.push({
+
+            action:
+                'Payroll Paid',
+
+            performedBy:
+                req.user.id,
+
+        });
+
+        await payroll.save();
+
+        return Response.success(
+            res,
+            payroll,
+            'Payroll marked as paid.'
+        );
+
+    });
+
+
+
+    /*
+    =====================================================
+    Reject Payroll
+    =====================================================
+    */
+   static reject = asyncHandler(async (req, res) => {
+
+        const payroll = await Payroll.findById(req.params.id);
+
+        if (!payroll) {
+            return Response.notFound(
+                res,
+                "Payroll not found."
+            );
+        }
+
+        payroll.workflow.employeeStatus = "rejected";
+        payroll.workflow.rejectedBy = req.user.id;
+        payroll.workflow.rejectedAt = new Date();
+
+        payroll.auditTrail.push({
+            action: "Payroll Rejected",
+            performedBy: req.user.id,
+            remarks: req.body.remarks || "",
+        });
+
+        await payroll.save();
+
+        return Response.success(
+            res,
+            payroll,
+            "Payroll rejected."
+        );
+
+    });
+
+    /*
+    =====================================================
+    Delete Draft Payroll
+    =====================================================
+    */
+
+    static remove = asyncHandler(async (req, res) => {
+
+        const payroll =
+            await Payroll.findById(
+                req.params.id
+            );
+
+        if (!payroll) {
+
+            return Response.notFound(
+                res,
+                'Payroll not found.'
+            );
+
+        }
+
+        if (
+            payroll.workflow.employeeStatus !==
+            'draft'
+        ) {
+
+            return Response.badRequest(
+                res,
+                'Only draft payroll can be deleted.'
+            );
+
+        }
+
+        await payroll.deleteOne();
+
+        return Response.success(
+            res,
+            null,
+            'Payroll deleted.'
+        );
+
+    });
+
+
+    /*
+    =====================================================
+    Bulk Generate Payroll
+    =====================================================
+    */
+
+   static bulkGenerate = asyncHandler(async (req, res) => {
+
+        const { payrollPeriodId } = req.body;
+
+        const result =
+            await PayrollBatchService.finalize(
+
+                payrollPeriodId,
+
+                req.user.id
+
+            );
+
+        return Response.success(
+
+            res,
+
+            result,
+
+            'Bulk payroll generated.'
+
+        );
+
+    });
+
+    /*
+    =====================================================
+    Statistics
+    =====================================================
+    */
+   static statistics = asyncHandler(async (req, res) => {
+
+        const summary =
+            await Payroll.aggregate([
+
+            {
+                $group:{
+                    _id:null,
+                    
+                    payrolls:{
+                        $sum:1
+                    },
+                    gross:{
+                        $sum:'$totals.grossPay'
+                    },
+                    net:{
+                        $sum:'$totals.netPay'
+                    },
+                    deductions:{
+                        $sum:'$totals.totalDeductions'
+                    }
+                }
+            }
+        ]);
+
+        return Response.success(
+            res,
+            summary[0] || {
+                payrolls:0,
+                gross:0,
+                net:0,
+                deductions:0,
+            }
+        );
+    });
 }
 
-if(
-employee.status===
-'terminated'
-){
 
-return res
-.status(409)
-.json({
-success:false,
-message:
-'Employee inactive',
-});
-
-}
-
-const result=
-await calculatePayroll(
-employee,
-target
-);
-
-return res
-.status(200)
-.json({
-
-success:true,
-
-data:{
-
-employee:{
-
-id:
-employee._id,
-
-employeeId:
-employee.employeeId,
-
-name:
-`${employee.user.firstName} ${employee.user.lastName}`,
-
-department:
-employee.department,
-
-position:
-employee.position,
-
-},
-
-period:
-target,
-
-...result.preview,
-
-},
-
-});
-
-}
-catch(err){
-
-next(err);
-
-}
-
-};
-
-// FINALIZE
-
-exports.finalize =
-async(
-req,
-res,
-next
-)=>{
-
-const session=
-await mongoose
-.startSession();
-
-try{
-
-await session
-.withTransaction(
-async()=>{
-
-const {
-employeeId,
-period,
-}=req.body;
-
-const target=
-period||
-currentPeriod();
-
-const employee=
-await Employee
-.findById(
-employeeId
-)
-.populate(
-'user'
-)
-.session(
-session
-);
-
-if(
-!employee
-){
-
-throw new Error(
-'Employee not found'
-);
-
-}
-
-if(
-employee.status===
-'terminated'
-){
-
-throw new Error(
-'Cannot process payroll'
-);
-
-}
-
-const existing=
-await Payroll
-.findOne({
-
-employee:
-employee._id,
-
-period:
-target,
-
-})
-.session(
-session
-);
-
-if(
-existing
-){
-
-throw new Error(
-'Payroll already exists'
-);
-
-}
-
-const result=
-await calculatePayroll(
-employee,
-target
-);
-
-const payroll=
-await Payroll
-.create(
-[{
-
-employee:
-employee._id,
-
-employeeSnapshot:
-snapshot(
-employee
-),
-
-period:
-target,
-
-...result.preview,
-
-status:
-'finalized',
-
-finalizedBy:
-req.user._id,
-
-finalizedAt:
-new Date(),
-
-}],
-{
-session,
-}
-);
-
-try{
-
-await dispatchNotification({
-  recipient: employee.user._id,
-  
-  email: employee.user.email,
-  channels: ['inApp', 'email'],
-
-  title: 'Payslip Ready',
-
-  message: `Payroll finalized for ${target}`,
-
-  emailContent:
-    templates.payrollFinalized(
-      employee.user.firstName,
-      target,
-      result.preview.netPay
-    ),
-});
-
-}
-catch(e){
-
-console.error(
-e
-);
-
-}
-
-return res
-.status(
-201
-)
-.json({
-
-success:true,
-
-data:
-payroll[0],
-
-});
-
-});
-
-}
-catch(
-err
-){
-
-next(
-err
-);
-
-}
-finally{
-
-session
-.endSession();
-
-}
-
-};
-
-// MY PAYROLL
-
-exports.getMyPayroll =
-async(
-req,
-res,
-next
-)=>{
-
-try{
-
-const employee=
-await Employee
-.findOne({
-
-user:
-req.user._id,
-
-});
-
-if(
-!employee
-){
-
-return res
-.status(404)
-.json({
-success:false,
-});
-
-}
-
-const payrolls=
-await Payroll
-.find({
-
-employee:
-employee._id,
-
-})
-.sort({
-
-period:-1,
-
-createdAt:-1,
-
-});
-
-res
-.status(200)
-.json({
-
-success:true,
-
-count:
-payrolls.length,
-
-data:
-payrolls,
-
-});
-
-}
-catch(
-err
-){
-
-next(
-err
-);
-
-}
-
-};
-
-// ALL
-
-exports.getAll =
-async(
-req,
-res,
-next
-)=>{
-
-try{
-
-const {
-
-page=1,
-
-limit=20,
-
-status,
-
-period,
-
-}=req.query;
-
-const filter={};
-
-if(
-status
-){
-
-filter.status=
-status;
-
-}
-
-if(
-period
-){
-
-filter.period=
-period;
-
-}
-
-const payrolls=
-await Payroll
-.find(
-filter
-)
-
-.populate({
-
-path:
-'employee',
-
-populate:{
-
-path:
-'user',
-
-select:
-'firstName lastName email',
-
-},
-
-})
-
-.sort({
-
-period:-1,
-
-})
-
-.skip(
-(
-page-1
-)
-*
-limit
-)
-
-.limit(
-Number(
-limit
-)
-);
-
-const total=
-await Payroll
-.countDocuments(
-filter
-);
-
-res
-.status(200)
-.json({
-
-success:true,
-
-total,
-
-page:
-Number(
-page
-),
-
-data:
-payrolls,
-
-});
-
-}
-catch(
-err
-){
-
-next(
-err
-);
-
-}
-
-};
-
-// ONE
-
-exports.getOne =
-async(
-req,
-res,
-next
-)=>{
-
-try{
-
-const payroll=
-await Payroll
-.findById(
-req.params.id
-)
-
-.populate({
-
-path:
-'employee',
-
-populate:{
-path:
-'user',
-select:
-'firstName lastName email',
-},
-
-});
-
-if(
-!payroll
-){
-
-return res
-.status(404)
-.json({
-success:false,
-});
-
-}
-
-if(
-req.user.role === 'employee'
-&&
-String(
-payroll.employee.user._id
-)
-!==
-String(
-req.user._id
-)
-){
-
-return res
-.status(403)
-.json({
-
-success:false,
-
-message:
-'Access denied',
-
-});
-
-}
-
-res
-.status(200)
-.json({
-
-success:true,
-
-data:
-payroll,
-
-});
-
-}
-catch(
-err
-){
-
-next(
-err
-);
-
-}
-
-};
+module.exports = PayrollController;
