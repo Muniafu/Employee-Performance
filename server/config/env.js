@@ -11,11 +11,15 @@ const required = [
   'SMTP_PASS',
 ];
 
-required.forEach((key) => {
-  if (!process.env[key]) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-});
+const missing = required.filter(
+  key => !process.env[key]
+);
+
+if (missing.length) {
+  throw new Error(
+    `Missing environment variables:\n${missing.join('\n')}`
+  );
+}
 
 module.exports = {
   PORT: process.env.PORT,

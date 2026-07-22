@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
     );
 
     logger.info(
-      `❌ User disconnected: ${socket.userId}`
+      ` User disconnected: ${socket.userId}`
     );
   });
 });
@@ -210,6 +210,16 @@ app.use(
 );
 
 app.use(
+  '/api/payroll-periods',
+  require('./routes/payrollPeriodRoutes')
+);
+
+app.use(
+  '/api/payroll-settings',
+  require('./routes/payrollSettingsRoutes')
+);
+
+app.use(
   '/api/compliance',
   require('./routes/complianceRoutes')
 );
@@ -306,7 +316,7 @@ mongoose
   })
   .catch((err) => {
     logger.error(
-      `❌ DB connection failed: ${err.message}`
+      `DB connection failed: ${err.message}`
     );
 
     process.exit(1);
