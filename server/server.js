@@ -36,7 +36,8 @@ const {
 
 const {
   setIO,
-  onlineUsers,
+  addUserSocket,
+  removeUserSocket,
 } = require('./socket/socketManager');
 
 const app = express();
@@ -82,22 +83,23 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  onlineUsers.set(
+  addUserSocket(
     socket.userId.toString(),
-    socket.id
+    socket.id 
   );
 
   logger.info(
-    `🔌 User connected: ${socket.userId}`
+    `User connected: ${socket.userId}`
   );
 
   socket.on('disconnect', () => {
-    onlineUsers.delete(
-      socket.userId.toString()
+    removeUserSocket(
+      socket.userId.toString(),
+      socket.id
     );
 
     logger.info(
-      ` User disconnected: ${socket.userId}`
+      `User disconnected: ${socket.userId}`
     );
   });
 });
@@ -305,12 +307,12 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     logger.info(
-      `✅ MongoDB connected: ${MONGO_URI}`
+      `MongoDB connected: ${MONGO_URI}`
     );
 
     server.listen(PORT, () => {
       logger.info(
-        `🚀 EMS Server running on http://localhost:${PORT} [${NODE_ENV}]`
+        `EMS Server running on http://localhost:${PORT} [${NODE_ENV}]`
       );
     });
   })

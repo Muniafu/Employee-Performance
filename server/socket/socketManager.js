@@ -16,26 +16,50 @@ const getIO = () => {
   return ioInstance;
 };
 
-const getUserSocket = (userId) => {
-  return onlineUsers.get(
-    userId.toString()
-  );
+const addUserSocket = (userId, socketId) => {
+
+    const key = userId.toString();
+
+    if (!onlineUsers.has(key)) {
+        onlineUsers.set(key, new Set());
+    }
+
+    onlineUsers.get(key).add(socketId);
+
+};
+
+const removeUserSocket = (userId, socketId) => {
+
+    const key = userId.toString();
+
+    if (!onlineUsers.has(key)) return;
+
+    const sockets = onlineUsers.get(key);
+
+    sockets.delete(socketId);
+
+    if (sockets.size === 0) {
+        onlineUsers.delete(key);
+    }
+
 };
 
 const getUserSockets = (userId) => {
-  const socketId = onlineUsers.get(
-    userId.toString()
-  );
 
-  return socketId
-    ? [socketId]
-    : [];
+    const sockets =
+        onlineUsers.get(userId.toString());
+
+    return sockets
+        ? [...sockets]
+        : [];
+
 };
 
 module.exports = {
   setIO,
   getIO,
   onlineUsers,
-  getUserSocket,
+  addUserSocket,
+  removeUserSocket,
   getUserSockets,
 };

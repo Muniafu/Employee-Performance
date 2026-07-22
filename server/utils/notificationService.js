@@ -31,14 +31,22 @@ const createNotification = async ({
     try {
       const io = getIO();
 
-      const sockets = getUserSockets(
-        recipient.toString()
-      );
+      const sockets = getUserSockets(recipient);
+
+      const unreadCount =
+        await Notification.countDocuments({
+          recipient,
+          read: false,
+          archived: false,
+        });
 
       for (const socketId of sockets) {
+        
         io.to(socketId).emit(
-          'notification:new',
-          notification
+          'notification:new',{
+            notification,
+            unreadCount,
+          }
         );
       }
     } catch (socketErr) {
@@ -58,22 +66,67 @@ const createNotification = async ({
 };
 
 const markRead = async (
-  notificationId,
-  userId
+    notificationId,
+    userId
 ) => {
-  return Notification.findOneAndUpdate(
-    {
-      _id: notificationId,
-      recipient: userId,
-    },
-    {
-      read: true,
-      readAt: new Date(),
-    },
-    {
-      new: true,
+
+    const notification =
+        await Notification.findOneAndUpdate(
+            {
+                _id: notificationId,
+                recipient: userId,
+            },
+            {
+                read: true,
+                readAt: new Date(),
+            },
+            {
+                new: true,
+            }
+        );
+
+    if (notification) {
+
+        try {
+
+            const io = getIO();
+
+            const sockets =
+                getUserSockets(userId);
+
+            const unreadCount =
+                await Notification.countDocuments({
+
+                    recipient: userId,
+
+                    read: false,
+
+                    archived: false,
+
+                });
+
+            sockets.forEach(socketId => {
+
+                io.to(socketId).emit(
+                    'notification:updated',
+                    {
+                        notification,
+                        unreadCount,
+                    }
+                );
+
+            });
+
+        } catch (err) {
+
+            logger.error(err.message);
+
+        }
+
     }
-  ).lean();
+
+    return notification;
+
 };
 
 const getUserNotifications = async (

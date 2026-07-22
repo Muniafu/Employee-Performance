@@ -1,4 +1,5 @@
 const { getUserNotifications, markRead } = require('../utils/notificationService');
+const { getIO,getUserSockets } = require('../socket/socketManager');
 
 const Notification = require('../models/Notification');
 
@@ -109,6 +110,18 @@ exports.markAsRead = async (req, res, next) => {
 exports.markAllRead = async (req, res, next) => {
   try {
     await Notification.updateMany({ recipient: req.user._id, read: false }, { read: true, readAt: new Date() });
+    const io = getIO();
+
+    const sockets = getUserSockets(req.user._id);
+
+    sockets.forEach(socketId => {
+      io.to(socketId).emit(
+        'notifications:read-all',
+        {
+          message: 'All notifications marked as read.',
+        }
+      );
+    });
     res.status(200).json({ success: true, message: 'All notifications marked as read.' });
   } catch (err) { next(err); }
 };

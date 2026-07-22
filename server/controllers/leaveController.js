@@ -3,7 +3,6 @@ const Employee = require('../models/Employee');
 const { createNotification } = require('../utils/notificationService');
 const { sendEmail, templates } = require('../utils/emailService');
 const User = require('../models/User');
-const { getIO } = require( '../socket/socketManager' );
 
 // POST /api/leave
 exports.apply = async (req, res, next) => {
@@ -90,18 +89,6 @@ exports.approve = async (req, res, next) => {
     leave.approvedAt = new Date();
     leave.adminNote = req.body.adminNote || '';
     await leave.save();
-    try {
-
-      getIO().emit(
-      'leave:approved',
-      {
-      employee:
-      leave.employee._id,
-      }
-      );
-
-      } catch {}
-
     // Deduct balance
     const emp = await Employee.findById(leave.employee._id);
     if (emp && emp.leaveBalance[leave.leaveType] !== undefined) {
@@ -111,7 +98,7 @@ exports.approve = async (req, res, next) => {
 
     // Notify employee
     await createNotification({ recipient: leave.employee.user._id, type: 'leave', title: 'Leave Approved ✅', message: `Your ${leave.leaveType} leave has been approved.`, priority: 'medium' });
-    getIO().emit('leave:approved', { employee: leave.employee.user._id });
+    
     const emailResult = await sendEmail({
       to: leave.employee.user.email,
       ...templates.leaveApproved(
@@ -145,17 +132,6 @@ exports.reject = async (req, res, next) => {
     leave.approvedAt = new Date();
     leave.adminNote = req.body.adminNote || '';
     await leave.save();
-    try {
-
-      getIO().emit(
-      'leave:approved',
-      {
-      employee:
-      leave.employee._id,
-      }
-      );
-
-      } catch {}
 
     await createNotification({ recipient: leave.employee.user._id, type: 'leave', title: 'Leave Request Update', message: `Your ${leave.leaveType} leave was not approved. Check admin note.`, priority: 'medium' });
     const emailResult = await sendEmail({
@@ -185,17 +161,6 @@ exports.cancel = async (req, res, next) => {
     if (leave.status !== 'pending') return res.status(400).json({ success: false, message: 'Only pending leaves can be cancelled.' });
     leave.status = 'cancelled';
     await leave.save();
-    try {
-
-      getIO().emit(
-      'leave:approved',
-      {
-      employee:
-      leave.employee._id,
-      }
-      );
-
-      } catch {}
     res.status(200).json({ success: true, data: leave });
   } catch (err) { next(err); }
 };
