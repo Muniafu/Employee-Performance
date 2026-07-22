@@ -55,14 +55,28 @@ export default function Login() {
       const response =
         await register(regForm);
 
-      toast.info(
-        response.message ||
-        'Registration submitted. Await administrator approval.'
-      );
+        /**
+         * First system administrator
+         */
+        
+        if (response.data?.approved) {
 
-      /**
-       * Reset form
-       */
+          toast.success(
+            'System initialized successfully.'
+          );
+
+          navigate('/dashboard');
+
+          return;
+        }
+
+        /**
+         * Normal employee registration
+         */
+
+        toast.success(
+          response.message
+        );
 
       setRegForm({
         firstName: '',

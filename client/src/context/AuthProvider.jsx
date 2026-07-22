@@ -189,15 +189,36 @@ export default function AuthProvider({
    * REGISTER
    */
 
-  const register =
-  useCallback(
+  const register = useCallback(
     async (payload) => {
-
-      const { data } =
-        await api.post(
-          '/auth/register',
+      const { data } = await api.post(
+        '/auth/register',
           payload
         );
+
+        /**
+         * First system adminidtration
+         */
+
+        if (
+          data.data?.approved &&
+          data.data?.token &&
+          data.data?.user
+        ) {
+          localStorage.setItem(
+            'ems_token',
+            data.data.token
+          );
+
+          localStorage.setItem(
+            'ems_user',
+            JSON.stringify(data.data.user)
+          );
+
+          setToken(data.data.token);
+
+          setUser(data.data.user);
+        }
 
       return data;
     },

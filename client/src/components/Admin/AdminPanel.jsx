@@ -551,8 +551,8 @@ export default function AdminPanel() {
                 {
                   label: 'Employee',
                   render: (p) =>
-                    `${p.employee?.user?.firstName || ''} ${
-                      p.employee?.user?.lastName || ''
+                    `${p.employeeSnapshot.firstName || ''} ${
+                      p.employeeSnapshot.lastName || ''
                     }`
                 },
 
@@ -564,7 +564,7 @@ export default function AdminPanel() {
                 {
                   label: 'Net Pay',
                   render: (p) =>
-                    `KES ${p.netPay?.toLocaleString()}`
+                    `KES ${p.totals.netPay?.toLocaleString()}`
                 },
 
                 {
