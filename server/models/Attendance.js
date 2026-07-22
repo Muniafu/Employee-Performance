@@ -1,106 +1,136 @@
 const mongoose = require('mongoose');
+const {
+    ATTENDANCE_STATUS,
+} = require('../constants/payrollConstants');
 
 const attendanceSchema = new mongoose.Schema(
 {
-employee:{
-type:mongoose.Schema.Types.ObjectId,
-ref:'Employee',
-required:true,
-index:true,
-},
+    employee:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Employee',
+        required:true,
+        index:true,
+    },
+    
+    date:{
+        type:Date,
+        required:true,
+        index:true,
+    },
+    
+    clockIn:Date,
+    
+    clockOut:Date,
+    
+    hoursWorked:{
+        type:Number,
+        default:0,
+        min:0,
+    },
 
-date:{
-type:Date,
-required:true,
-index:true,
-},
+    overtimeHours:{
+        type:Number,
+        default:0,
+        min:0,
+    },
 
-clockIn:Date,
+    lateMinutes:{
+        type:Number,
+        default:0,
+        min:0,
+    },
 
-clockOut:Date,
+    status:{
+        type:String,
+        enum:Object.values(
+            ATTENDANCE_STATUS
+        ),
+        default:
+            ATTENDANCE_STATUS.PRESENT,
+    },
 
-hoursWorked:{
-type:Number,
-default:0,
-min:0,
-},
+    location:{
+        type:String,
+        trim:true,
+        default:'office',
+    },
 
-overtime:{
-type:Number,
-default:0,
-min:0,
-},
+    approvedBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+    },
 
-isLate:{
-type:Boolean,
-default:false,
-},
+    source:{
+        type:String,
+        enum:[
+            'manual',
+            'biometric',
+            'mobile',
+            'import',
+        ],
+        default:'manual',
+    },
 
-status:{
-type:String,
-enum:[
-'present',
-'absent',
-'half_day',
-'late',
-'on_leave',
-],
-default:'present',
-},
+    approvedAt:Date,
 
-location:{
-type:String,
-default:'office',
-},
-
-note:{
-type:String,
-default:'',
-},
-},
-{
-timestamps:true,
-}
-);
-
-attendanceSchema.index({
-employee:1,
-date:1,
-status:1,
+    note:{
+        type:String,
+        default:'',
+    },
+},{
+    timestamps:true,
 });
 
-attendanceSchema.methods.calculateHours =
-function(){
+attendanceSchema.index({
+    employee:1,
+    date:1,
+},{
+    unique:true,
+});
 
-if(
-this.clockIn &&
-this.clockOut
-){
+attendanceSchema.index({
+    status:1,
+});
 
-const hours=
-(
-this.clockOut-
-this.clockIn
-)
-/
-(1000*60*60);
+attendanceSchema.pre(
+'validate',
+function(next){
+    if(
+        this.clockIn &&
+        this.clockOut &&
+        this.clockOut <
+        this.clockIn
+    ){
+        return next(
+            new Error(
+                'Clock-out cannot be earlier than clock-in.'
+            )
+        );
+    }
+    next();
+});
 
-this.hoursWorked=
-Number(
-hours.toFixed(2)
-);
+attendanceSchema.methods.calculateHours = function () {
 
-this.overtime=
-Math.max(
-0,
-Number(
-(hours-8)
-.toFixed(2)
-)
-);
+    if (!this.clockIn || !this.clockOut) {
+        return;
+    }
 
-}
+    const totalHours =
+        (this.clockOut - this.clockIn) /
+        (1000 * 60 * 60);
+
+    const standardHours = 8;
+
+    this.hoursWorked = Number(
+        Math.min(totalHours, standardHours).toFixed(2)
+    );
+
+    this.overtimeHours = Number(
+        Math.max(0, totalHours - standardHours).toFixed(2)
+    );
 
 };
+
 
 module.exports= mongoose.model( 'Attendance', attendanceSchema );
