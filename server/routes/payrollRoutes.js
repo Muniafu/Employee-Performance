@@ -1,80 +1,117 @@
-const router=
-require('express')
-.Router();
+const router = require('express').Router();
 
-const auth=
-require(
-'../middleware/authMiddleware'
-);
+const auth = require('../middleware/authMiddleware');
+const { authorize } = require('../middleware/roleMiddleware');
 
-const {
-authorize,
-}=
-require(
-'../middleware/roleMiddleware'
-);
+const PayrollController = require('../controllers/payrollController');
 
-const c=
-require(
-'../controllers/payrollController'
-);
+router.use(auth);
 
-router.use(
-auth
-);
+/*
+=====================================================
+EMPLOYEE
+=====================================================
+*/
 
 router.get(
-'/me',
-c.getMyPayroll
+    '/me',
+    PayrollController.getMyPayroll
+);
+
+/*
+=====================================================
+PAYROLL GENERATION
+=====================================================
+*/
+
+router.post(
+    '/preview',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.preview
+);
+
+router.patch(
+    "/:id/reject",
+    authorize("admin", "superuser"),
+    PayrollController.reject
 );
 
 router.post(
-'/preview',
-
-authorize(
-'admin',
-'superuser',
-'hr'
-),
-
-c.preview
+    '/generate',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.finalize
 );
 
 router.post(
-'/finalize',
+    '/bulk-generate',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.bulkGenerate
+);
 
-authorize(
-'admin',
-'superuser',
-'hr'
-),
+/*
+=====================================================
+WORKFLOW
+=====================================================
+*/
 
-c.finalize
+router.patch(
+    '/:id/review',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.review
+);
+
+router.patch(
+    '/:id/approve',
+    authorize('admin', 'superuser'),
+    PayrollController.approve
+);
+
+router.patch(
+    '/:id/lock',
+    authorize('admin', 'superuser'),
+    PayrollController.lock
+);
+
+router.patch(
+    '/:id/pay',
+    authorize('admin', 'superuser'),
+    PayrollController.markPaid
+);
+
+/*
+=====================================================
+REPORTS
+=====================================================
+*/
+
+router.get(
+    '/statistics',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.statistics
+);
+
+/*
+=====================================================
+CRUD
+=====================================================
+*/
+
+router.get(
+    '/',
+    authorize('admin', 'hr', 'superuser'),
+    PayrollController.getAll
 );
 
 router.get(
-'/all',
-
-authorize(
-'admin',
-'superuser',
-'hr'
-),
-
-c.getAll
+    '/:id',
+    authorize('admin', 'hr', 'superuser', 'employee'),
+    PayrollController.getOne
 );
 
-router.get(
-'/:id',
-
-authorize(
-'admin',
-'superuser',
-'hr',
-'employee'
-),
-
-c.getOne
+router.delete(
+    '/:id',
+    authorize('superuser'),
+    PayrollController.remove
 );
 
-module.exports= router;
+module.exports = router;
