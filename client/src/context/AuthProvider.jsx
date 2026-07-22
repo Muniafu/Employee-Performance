@@ -9,6 +9,10 @@ import { useNavigate }
   from 'react-router-dom';
 
 import api from '../services/api';
+import {
+  connectSocket,
+  disconnectSocket,
+} from '../services/socket';
 
 import AuthContext
   from './AuthContext';
@@ -45,9 +49,10 @@ export default function AuthProvider({
       localStorage.removeItem(
         'ems_user'
       );
+      
+      disconnectSocket();
 
       setUser(null);
-
       setToken(null);
 
       navigate('/login', {
@@ -80,6 +85,7 @@ export default function AuthProvider({
         );
 
         setToken(storedToken);
+        connectSocket(storedToken);
       }
 
     } catch (err) {
@@ -180,6 +186,8 @@ export default function AuthProvider({
 
         setUser(authUser);
 
+        connectSocket(authToken);
+
         return authUser;
       },
       []
@@ -218,6 +226,8 @@ export default function AuthProvider({
           setToken(data.data.token);
 
           setUser(data.data.user);
+
+          connectSocket(data.data.token);
         }
 
       return data;

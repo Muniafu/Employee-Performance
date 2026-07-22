@@ -34,7 +34,11 @@ export const connectSocket = (
 
   socket.on('connect', () => {
     console.log(
-      '✅ Socket connected'
+      'Socket connected'
+    );
+
+    socket.emit(
+      'notifications:async'
     );
   });
 

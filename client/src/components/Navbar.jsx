@@ -219,11 +219,15 @@ export default function Navbar({
               notifications.map((n) => (
                 <div
                   key={n._id}
-                  onClick={() =>
-                    readNotification(
+                  onClick={async () => {
+                    await readNotification(
                       n._id
-                    )
-                  }
+                    );
+
+                    if (n.link) {
+                      window.Location.href = navigate(n.link);
+                    }
+                  }}
                   style={{
                     padding: 12,
                     borderRadius: 10,

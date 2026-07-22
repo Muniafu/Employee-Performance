@@ -49,3 +49,15 @@ export const markAllAsRead =
 
     return data;
   };
+
+export const archiveNotification =
+    async (id) => {
+
+    const { data } =
+        await api.patch(
+            `/notifications/${id}/archive`
+        );
+
+    return data;
+
+};

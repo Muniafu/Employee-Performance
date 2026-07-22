@@ -34,9 +34,6 @@ export default function NotificationProvider({
   const mountedRef =
     useRef(true);
 
-  const pollingRef =
-    useRef(null);
-
   const [notifications,
     setNotifications] =
     useState([]);
@@ -193,28 +190,68 @@ export default function NotificationProvider({
 
     if (!socket) return;
 
-    const handleNewNotification =
-      (notification) => {
-        setNotifications(
-          (prev) => [
-            notification,
-            ...prev,
-          ]
-        );
+    const handleNewNotification = ({
+      notification,
+      unreadCount,
+    }) => {
 
-        setUnreadCount(
-          (prev) => prev + 1
-        );
-      };
+      setNotifications((prev) => [
+        notification,
+        ...prev,
+      ]);
+
+      if (
+        typeof unreadCount === 'number'
+      )
+        setUnreadCount(unreadCount);
+    };
+
+    const handleUpdatedNotification = ({
+      notification,
+      unreadCount,
+    }) => {
+      setNotifications((prev) =>
+        prev.map(item => 
+          item._id === notification._id
+            ? notification
+            : item
+        )
+      );
+      
+      setUnreadCount(unreadCount);
+    };
+
+    const handleReadAll = ({
+      unreadCount,
+    }) => {
+      setNotifications((prev) =>
+        prev.map(item => ({
+          ...item,
+          read: true,
+        }))
+      );
+      
+      setUnreadCount(unreadCount);
+
+    };
+
 
     socket.on(
       'notification:new',
-      handleNewNotification
+      'notification:updated',
+      'notifications:read-all',
+      handleNewNotification,
+      handleUpdatedNotification,
+      handleReadAll
     );
 
     return () => {
       socket.off(
         'notification:new',
+        'notification:updated',
+        'notifications:read-all',
+        handleUpdatedNotification,
+        handleReadAll,
         handleNewNotification
       );
 
@@ -225,26 +262,6 @@ export default function NotificationProvider({
   /*
    POLLING
   */
-
-  useEffect(() => {
-    if (authLoading || !token)
-      return;
-
-    pollingRef.current =
-      setInterval(() => {
-        refreshUnreadCount();
-      }, 60000);
-
-    return () => {
-      clearInterval(
-        pollingRef.current
-      );
-    };
-  }, [
-    token,
-    authLoading,
-    refreshUnreadCount,
-  ]);
 
   useEffect(() => {
     mountedRef.current = true;
