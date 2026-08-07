@@ -1,0 +1,73 @@
+/* ============================================================
+   responsive.css
+   Media queries ONLY. No new classes are introduced here that
+   don't already exist elsewhere — this file only adjusts them
+   at breakpoints.
+   Breakpoints: sidebar off-canvas <=1024px (matches App.jsx's
+   matchMedia check), content reflow <=768px, tablet 769–1024px,
+   auth stack <=960px.
+   ============================================================ */
+
+/* ── Sidebar off-canvas breakpoint ──────────────────────────────
+   Must match the matchMedia('(max-width: 1024px)') threshold in
+   App.jsx's handleMenuClick — that's what decides whether a click
+   toggles sidebarOpen (mobile/overlay) or sidebarCollapsed (desktop).
+   If you change one, change the other. */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+  /* Content never needs to make room for the sidebar below this
+     breakpoint, since it's an overlay, not part of the flow */
+  .dashboard-main { margin-left: 0; }
+}
+
+@media (min-width: 1025px) {
+  .sidebar-overlay { display: none; }
+}
+
+/* ── Mobile content reflow (<=768px) ───────────────────────────*/
+@media (max-width: 768px) {
+  .topbar { padding: 0 var(--space-4); }
+  .topbar-user { display: none; } /* keep avatar only, hide name/role */
+  .notification-dropdown { width: calc(100vw - 32px); right: -8px; }
+
+  .dashboard-content { padding: var(--space-4); }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .form-row, .form-row-3 { grid-template-columns: 1fr; }
+
+  .profile-layout { grid-template-columns: 1fr; }
+  .attendance-summary { grid-template-columns: repeat(2, auto); }
+  .attendance-header { flex-direction: column; }
+
+  .modal { max-width: calc(100vw - 32px); }
+
+  .social-buttons { grid-template-columns: 1fr; }
+}
+
+/* ── Tablet (769–1024px) ────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .profile-layout { grid-template-columns: 220px 1fr; }
+}
+
+/* ── Auth pages: stack hero panel below/hide above 960px ──────*/
+@media (max-width: 960px) {
+  .auth-main { grid-template-columns: 1fr; }
+  .auth-left { display: none; }
+  .auth-right { padding: var(--space-6); }
+  .theme-toggle-wrapper { top: var(--space-4); right: var(--space-4); }
+  .auth-illustration { min-height: 240px; }
+  .auth-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .auth-card { padding: var(--space-6); }
+  .wizard-step small { display: none; }
+}

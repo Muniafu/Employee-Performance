@@ -1,0 +1,139 @@
+/* ============================================================
+   sidebar.css
+   Sidebar.jsx ONLY. Depends on variables.css, global.css
+   (.avatar), animations.css (fadeIn).
+   Mobile open/close + collapse behavior finalized in responsive.css.
+   ============================================================ */
+
+.sidebar {
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-sidebar);
+  overflow: hidden;
+  transition: width var(--transition), transform var(--transition-spring);
+}
+
+.sidebar.sidebar-collapsed { width: var(--sidebar-w-collapsed); }
+
+/* ── Brand ──────────────────────────────────────────────────── */
+.sidebar-brand {
+  padding: var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: var(--on-color);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-text h1 {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--text);
+}
+.sidebar-brand-text span {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+/* ── Scrollable nav area ────────────────────────────────────── */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-2) 0;
+  scrollbar-width: thin;
+}
+.sidebar-nav::-webkit-scrollbar { width: 6px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-full); }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+
+.nav-section { padding: var(--space-4) var(--space-3) var(--space-1); }
+.nav-section-title {
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 var(--space-2) 6px;
+}
+
+/* ── Nav links ──────────────────────────────────────────────── */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-link:hover { background: var(--surface-2); color: var(--text); }
+.nav-link.active { background: var(--primary-soft); color: var(--color-primary); font-weight: var(--fw-semibold); }
+.nav-link .nav-icon { font-size: var(--fs-md); width: 18px; text-align: center; flex-shrink: 0; display: inline-flex; }
+.nav-link-danger:hover { background: var(--accent-soft); color: var(--color-danger); }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.sidebar-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  padding: var(--space-3);
+  background: var(--surface);
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.sidebar-user-name { font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--text); line-height: var(--lh-tight); }
+.sidebar-user-role { font-size: var(--fs-xs); color: var(--text-muted); text-transform: capitalize; }
+
+/* ── Mobile overlay ─────────────────────────────────────────── */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+  backdrop-filter: blur(2px);
+  z-index: calc(var(--z-sidebar) - 1);
+  animation: fadeIn var(--transition-fast);
+}
+
+/* ── Collapsed state: hide labels, center icons ────────────────
+   (breakpoint-independent — this is a UI toggle, not a media
+   query, so it lives here rather than responsive.css) */
+.sidebar-collapsed .sidebar-brand-text,
+.sidebar-collapsed .nav-section-title,
+.sidebar-collapsed .nav-text,
+.sidebar-collapsed .sidebar-user-details {
+  display: none;
+}
+.sidebar-collapsed .nav-link { justify-content: center; padding: 12px; }
+.sidebar-collapsed .sidebar-brand { justify-content: center; }
+.sidebar-collapsed .sidebar-user { justify-content: center; }

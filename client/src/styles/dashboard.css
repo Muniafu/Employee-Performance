@@ -1,0 +1,329 @@
+/* ============================================================
+   dashboard.css
+   Dashboard.jsx, Modal.jsx, and all HR pages that share the
+   dashboard layout (Analytics, Employees, Payroll, Attendance,
+   Leave, Performance, Career, Learning, Wellness, Engagement,
+   Notifications, Compliance, Onboarding, Admin).
+   Depends on variables.css, global.css (.btn, .avatar),
+   animations.css (fadeIn, scaleIn).
+   ============================================================ */
+
+/* ── Modal ──────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-5);
+  animation: fadeIn var(--transition-fast);
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleIn var(--transition-fast);
+}
+
+/* size modifiers: <div className={`modal modal-${size}`}> renders
+   "modal modal-" when size is unset — harmless, matches nothing */
+.modal-sm { max-width: 420px; }
+.modal-lg { max-width: 760px; }
+.modal-xl { max-width: 960px; }
+
+.modal-header {
+  padding: var(--space-5) var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+.modal-title { font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--text); }
+.modal-body { padding: var(--space-5) var(--space-6); }
+.modal-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: var(--surface);
+}
+
+/* ── Page title with inline icon ───────────────────────────── */
+.page-title-content { display: flex; align-items: center; gap: var(--space-2); }
+
+/* ── Section spacing ────────────────────────────────────────── */
+.dashboard-section { margin-bottom: var(--space-6); }
+.dashboard-section-sm { margin-top: var(--space-6); }
+
+/* ── Stat card ──────────────────────────────────────────────── */
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: var(--space-5);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+.stat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-md);
+  flex-shrink: 0;
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+.card-header {
+  padding: 18px var(--space-5) 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title { font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--text); }
+.card-body { padding: var(--space-5); }
+.card-link { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-primary); }
+.card-link:hover { color: var(--primary-hover); }
+.card-link-content { display: flex; align-items: center; gap: 4px; }
+
+/* ── List rows (used inside cards) ─────────────────────────── */
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+.list-item:last-child { border-bottom: none; }
+.list-item.flex-between { justify-content: space-between; }
+.list-title { font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--text); }
+.list-subtitle { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.badge-right { margin-left: auto; }
+
+/* ── Empty states within dashboard cards ────────────────────── */
+.dashboard-empty { padding: var(--space-6) 0; text-align: center; color: var(--text-muted); font-size: var(--fs-sm); }
+.empty-success { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); color: var(--color-success); }
+
+/* ── Analytics / engagement widgets ─────────────────────────── */
+.section-title { font-size: var(--fs-base); font-weight: var(--fw-bold); margin-bottom: var(--space-3); color: var(--text); }
+
+.analytics-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: var(--fs-base);
+  border-bottom: 1px solid var(--border);
+}
+.analytics-row:last-child { border-bottom: none; }
+.analytics-stack { display: flex; flex-direction: column; gap: 4px; }
+
+.engagement-stack { text-align: center; padding: var(--space-4) 0; }
+.engagement-score { font-size: var(--fs-3xl); font-weight: var(--fw-black); color: var(--color-primary); }
+.engagement-label { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 4px; }
+.engagement-meta { font-size: var(--fs-xs); color: var(--text-light); margin-top: 2px; }
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  margin-bottom: var(--space-5);
+}
+.tab {
+  padding: 8px var(--space-4);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.tab:hover { color: var(--text); }
+.tab.active { background: var(--surface); color: var(--color-primary); box-shadow: var(--shadow-sm); }
+
+/* ── Card header action row (search + filters) ─────────────────
+   Positional selector: safe because .card-title is a <span>,
+   so this only ever matches the one filters <div>. See note. */
+.card-header > div {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.card-header input.form-control,
+.card-header select.form-control {
+  width: auto;
+  min-width: 140px;
+}
+
+/* ── Person / employee row (table cell + card usage) ──────────*/
+.employee-card { display: flex; align-items: center; gap: var(--space-3); }
+.employee-name { font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--text); }
+.employee-email { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ── Default stat-card label/value (for pages that don't
+   hardcode look via inline style, e.g. AttendanceTracker) ────*/
+.stat-card p { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.stat-card strong { font-size: var(--fs-2xl); font-weight: var(--fw-black); color: var(--text); }
+
+/* ── Attendance "today" card ────────────────────────────────── */
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: var(--space-6);
+  margin-top: var(--space-3);
+}
+.attendance-summary p { font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 4px; }
+.attendance-summary strong { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--text); }
+.attendance-actions { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+
+/* ── List page toolbar (search + filters above a table) ────────
+   Used by EmployeeList and similar list pages. */
+.toolbar { display: flex; gap: var(--space-3); margin-bottom: var(--space-5); flex-wrap: wrap; align-items: center; }
+.search-grow { flex: 1; min-width: 220px; }
+.filter-select { width: auto; min-width: 180px; }
+
+.employee-id {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ── Employee profile layout ──────────────────────────────────*/
+.profile-layout { display: grid; grid-template-columns: 280px 1fr; gap: var(--space-6); align-items: start; }
+.profile-sidebar { text-align: center; }
+.profile-avatar { margin: 0 auto var(--space-4); font-size: var(--fs-2xl); }
+.profile-name { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--text); }
+.profile-position { font-size: var(--fs-sm); color: var(--color-primary); font-weight: var(--fw-semibold); margin-top: 2px; }
+.profile-department { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+.profile-stats { display: flex; flex-direction: column; gap: var(--space-3); font-size: var(--fs-sm); }
+.profile-contact { text-align: left; font-size: var(--fs-sm); color: var(--text); }
+.profile-balance-row { font-size: var(--fs-xs); padding: 4px 0; }
+.profile-content { display: flex; flex-direction: column; gap: var(--space-5); }
+.profile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+.profile-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+.profile-label { display: block; font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.profile-value { font-size: var(--fs-base); color: var(--text); font-weight: var(--fw-medium); }
+
+/* ── Notifications page (full list — distinct from the topbar
+   dropdown in navbar.css, which scopes its own identical class
+   names under .notification-dropdown to avoid collision) ──────*/
+.notification-header { padding-bottom: var(--space-4); margin-bottom: var(--space-2); }
+.notification-list { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-4); }
+.notification-empty { padding: var(--space-9) var(--space-4); text-align: center; color: var(--text-muted); }
+.notification-item-header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: 4px; }
+.notification-new {
+  background: var(--accent-soft);
+  color: var(--color-danger);
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.notification-message { font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: 4px; }
+.notification-time { font-size: var(--fs-xs); color: var(--text-light); }
+
+/* ── Multi-step wizard header (OffboardingForm step indicator,
+   reused pattern for any future multi-step admin flow) ────────*/
+.step-indicator { display: flex; margin-bottom: var(--space-6); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.step-indicator-item {
+  flex: 1;
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  border-right: 1px solid var(--border);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.step-indicator-item:last-child { border-right: none; }
+.step-indicator-item.current { background: var(--color-primary); color: var(--on-color); }
+.step-indicator-item.done { background: var(--primary-soft); color: var(--color-primary); cursor: pointer; }
+.step-indicator-item.upcoming { color: var(--text-muted); }
+.step-indicator-badge {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-black);
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  flex-shrink: 0;
+}
+
+/* ── Phase / journey stepper (OnboardingForm) ──────────────────*/
+.phase-stepper { display: flex; align-items: center; overflow-x: auto; }
+.phase-stepper-item { display: flex; align-items: center; }
+.phase-stepper-node { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px; }
+.phase-stepper-circle {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  border: 2px solid var(--border-strong);
+  color: var(--text-muted);
+}
+.phase-stepper-circle.done { background: var(--color-success); border-color: var(--color-success); color: var(--on-color); }
+.phase-stepper-circle.current { background: var(--color-primary); border-color: var(--color-primary); color: var(--on-color); }
+.phase-stepper-label { font-size: 10px; font-weight: var(--fw-semibold); color: var(--text-muted); text-align: center; white-space: nowrap; }
+.phase-stepper-label.current { color: var(--color-primary); }
+.phase-stepper-connector { flex: 1; height: 2px; background: var(--border); margin: 0 4px; margin-bottom: 20px; }
+.phase-stepper-connector.done { background: var(--color-success); }
+
+/* ── Checklist task row (Offboarding / Onboarding) ─────────────*/
+.checklist-task { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); }
+.checklist-task:last-child { border-bottom: none; }
+.checklist-check {
+  margin-top: 2px;
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border-strong);
+  background: transparent;
+  color: var(--on-color);
+  font-size: var(--fs-xs);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.checklist-check.done { background: var(--color-success); border-color: var(--color-success); }
+.checklist-check.required { border-color: var(--color-primary); }
+.checklist-task-title { font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--text); }
+.checklist-task-title.done { font-weight: var(--fw-normal); text-decoration: line-through; color: var(--text-muted); }
+.checklist-task-desc { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }

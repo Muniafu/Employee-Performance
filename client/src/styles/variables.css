@@ -1,0 +1,157 @@
+/* ============================================================
+   variables.css
+   ONLY colors, spacing, fonts, shadows, z-index.
+   No selectors that render anything — tokens only.
+   This is the ONLY file allowed to contain raw hex values.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── Raw palette (light mode) — the only 5 approved colors ── */
+  --color-text:      #090A0C;
+  --color-bg:        #D8DDE9;
+  --color-primary:   #054A9E;
+  --color-secondary: #210576;
+  --color-accent:    #900419;
+
+  /* Fixed reference points (used for on-color text — see below).
+     These are just the light/dark Text values, always available
+     regardless of active theme, so we never invent a new color. */
+  --color-lightest: #F3F4F6; /* = dark-mode text value */
+  --color-darkest:  #090A0C; /* = light-mode text value */
+
+  /* ── Semantic aliases (per your mapping) ──────────────────── */
+  --color-info:    var(--color-primary);
+  --color-success: var(--color-primary);
+  --color-warning: var(--color-secondary);
+  --color-danger:  var(--color-accent);
+  --color-error:   var(--color-accent);
+
+  /* ── Legacy aliases ───────────────────────────────────────────
+     Some component inline styles (e.g. Dashboard.jsx) reference
+     these names directly. Keep in sync if new inline usages
+     appear, or better, migrate the JSX to the canonical names
+     above over time. */
+  --color-text-muted: var(--text-muted);
+  --color-info-bg:    var(--primary-soft);
+  --color-success-bg: var(--primary-soft);
+  --color-warning-bg: var(--secondary-soft);
+  --color-danger-bg:  var(--accent-soft);
+  --color-bg-surface-raised: var(--surface-2);
+  --success:   var(--color-success);
+  --border-2:  var(--border-strong);
+  --info:      var(--color-info);
+  --color-info-light: var(--primary-soft);
+
+  /* ── Text on top of saturated brand colors (buttons, badges) ─
+     Light mode: primary/secondary/accent are all deep/dark →
+     use the lightest available token for contrast. */
+  --on-color: var(--color-lightest);
+
+  /* ── Elevated surfaces (cards, modals, sidebar, topbar) ──────
+     Derived from Background, mixed toward Text — this makes
+     surfaces recede slightly in light mode and lift slightly
+     in dark mode, automatically, per theme. */
+  --surface:   color-mix(in srgb, var(--color-bg) 96%, var(--color-text) 4%);
+  --surface-2: color-mix(in srgb, var(--color-bg) 90%, var(--color-text) 10%);
+  --surface-3: color-mix(in srgb, var(--color-bg) 82%, var(--color-text) 18%);
+
+  /* ── Borders (translucent Text, no new hues) ─────────────────*/
+  --border:        color-mix(in srgb, var(--color-text) 14%, transparent);
+  --border-strong: color-mix(in srgb, var(--color-text) 26%, transparent);
+
+  /* ── Text variants ────────────────────────────────────────── */
+  --text:        var(--color-text);
+  --text-muted:  color-mix(in srgb, var(--color-text) 65%, var(--color-bg) 35%);
+  --text-light:  color-mix(in srgb, var(--color-text) 45%, var(--color-bg) 55%);
+
+  /* ── Interactive state layers ─────────────────────────────────
+     hover/active push the base color toward --color-text (12/22%),
+     which darkens it in light mode and lightens it in dark mode —
+     correct in both themes without per-theme overrides.
+     -soft = low-opacity tint for badges, active nav links, chips. */
+  --primary-hover:   color-mix(in srgb, var(--color-primary) 88%, var(--color-text) 12%);
+  --primary-active:  color-mix(in srgb, var(--color-primary) 78%, var(--color-text) 22%);
+  --primary-soft:    color-mix(in srgb, var(--color-primary) 14%, var(--color-bg) 86%);
+
+  --secondary-hover: color-mix(in srgb, var(--color-secondary) 88%, var(--color-text) 12%);
+  --secondary-active:color-mix(in srgb, var(--color-secondary) 78%, var(--color-text) 22%);
+  --secondary-soft:  color-mix(in srgb, var(--color-secondary) 14%, var(--color-bg) 86%);
+
+  --accent-hover:    color-mix(in srgb, var(--color-accent) 88%, var(--color-text) 12%);
+  --accent-active:   color-mix(in srgb, var(--color-accent) 78%, var(--color-text) 22%);
+  --accent-soft:     color-mix(in srgb, var(--color-accent) 14%, var(--color-bg) 86%);
+
+  /* ── Focus ring ───────────────────────────────────────────── */
+  --focus-ring: color-mix(in srgb, var(--color-primary) 35%, transparent);
+
+  /* ── Shadows (derived from Text — no pure black) ─────────────*/
+  --shadow-sm: 0 1px 2px color-mix(in srgb, var(--color-text) 8%, transparent);
+  --shadow:    0 1px 3px color-mix(in srgb, var(--color-text) 10%, transparent),
+               0 4px 12px color-mix(in srgb, var(--color-text) 8%, transparent);
+  --shadow-lg: 0 4px 6px color-mix(in srgb, var(--color-text) 6%, transparent),
+               0 20px 48px color-mix(in srgb, var(--color-text) 14%, transparent);
+
+  /* ── Spacing scale ────────────────────────────────────────── */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-7: 32px; --space-8: 40px;
+  --space-9: 48px; --space-10: 64px;
+
+  /* ── Radius scale ─────────────────────────────────────────── */
+  --radius-sm:   6px;
+  --radius:      10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-full: 999px;
+
+  /* ── Typography ───────────────────────────────────────────── */
+  --font:      'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --fs-xs:   11px;
+  --fs-sm:   12.5px;
+  --fs-base: 13.5px;
+  --fs-md:   15px;
+  --fs-lg:   17px;
+  --fs-xl:   22px;
+  --fs-2xl:  28px;
+  --fs-3xl:  clamp(36px, 5vw, 56px);
+
+  --fw-normal: 400; --fw-medium: 500; --fw-semibold: 600;
+  --fw-bold:   700; --fw-black: 800;
+
+  --lh-tight: 1.2; --lh-normal: 1.6; --lh-loose: 1.9;
+
+  /* ── Layout dimensions ────────────────────────────────────── */
+  --sidebar-w:           260px;
+  --sidebar-w-collapsed: 84px;
+  --topbar-h:            64px;
+
+  /* ── Transitions ──────────────────────────────────────────── */
+  --transition-fast:   .15s ease;
+  --transition:         .25s ease;
+  --transition-slow:    .4s ease;
+  --transition-spring:  .3s cubic-bezier(.4,0,.2,1);
+
+  /* ── Z-index scale ────────────────────────────────────────── */
+  --z-base:     1;
+  --z-topbar:   100;
+  --z-sidebar:  200;
+  --z-overlay:  800;
+  --z-modal:    900;
+  --z-toast:    1000;
+}
+
+/* ── Dark mode ──────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --color-text:      #F3F4F6;
+  --color-bg:        #161B27;
+  --color-primary:   #61A6FA;
+  --color-secondary: #A689FA;
+  --color-accent:    #FB6F84;
+
+  /* Dark mode: primary/secondary/accent are light/pastel →
+     on-color text must be the darkest available token. */
+  --on-color: var(--color-darkest);
+}

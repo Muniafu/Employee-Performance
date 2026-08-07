@@ -1,0 +1,139 @@
+/* ============================================================
+   navbar.css
+   Navbar.jsx ONLY. Depends on variables.css, global.css
+   (.btn, .avatar), animations.css (slideDown).
+   ============================================================ */
+
+.topbar {
+  height: var(--topbar-h);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-topbar);
+  gap: var(--space-4);
+}
+
+.topbar-spacer { flex: 1; }
+
+/* ── Notifications ──────────────────────────────────────────── */
+.notification-wrapper { position: relative; }
+
+.notification-trigger { position: relative; }
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--on-color);
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  line-height: 16px;
+  text-align: center;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-overlay);
+  animation: slideDown var(--transition-fast);
+}
+
+.notification-dropdown .notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+
+.notification-dropdown .notification-empty,
+.notification-dropdown .notification-error {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.notification-dropdown .notification-error { color: var(--color-danger); }
+
+.notification-dropdown .notification-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  transition: background var(--transition-fast);
+}
+.notification-dropdown .notification-item:last-child { border-bottom: none; }
+.notification-dropdown .notification-item:hover { background: var(--surface-2); }
+
+.notification-dropdown .notification-title {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.notification-dropdown .notification-message {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.notification-dropdown .notification-time {
+  font-size: var(--fs-xs);
+  color: var(--text-light);
+}
+
+/* ── Profile block ──────────────────────────────────────────── */
+.topbar-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--border);
+}
+
+.topbar-user-name {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--text);
+  line-height: var(--lh-tight);
+}
+
+.topbar-user-role {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+.topbar-user-role.role-admin,
+.topbar-user-role.role-superuser { color: var(--color-danger); }
+.topbar-user-role.role-hr,
+.topbar-user-role.role-manager { color: var(--color-secondary); }
+.topbar-user-role.role-employee { color: var(--color-primary); }

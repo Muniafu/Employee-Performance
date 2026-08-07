@@ -1,0 +1,76 @@
+/* ============================================================
+   forms.css
+   FormInput.jsx and all CRUD/auth forms across the app.
+   Depends on variables.css, global.css.
+   ============================================================ */
+
+.form-group { margin-bottom: var(--space-4); }
+
+.form-label {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 9px var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-base);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-control::placeholder { color: var(--text-light); }
+.form-control:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.form-control.error {
+  border-color: var(--color-accent);
+}
+.form-control.error:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+.form-control:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+textarea.form-control { min-height: 96px; resize: vertical; }
+
+.form-select {
+  appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 36px;
+  /* icon color is fixed (not theme-reactive) since it's baked
+     into an inline SVG data-URI — safe neutral value, redraw
+     with --text-muted if you want it to react to theme changes */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+}
+
+.form-hint {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.form-error {
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  margin-top: 4px;
+}
+
+/* ── Compact select used inline in table cells ────────────────*/
+.role-select { min-width: 110px; padding: 6px 30px 6px 10px; text-transform: capitalize; }
+
+/* ── Layout helpers for multi-field rows ──────────────────────*/
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); }

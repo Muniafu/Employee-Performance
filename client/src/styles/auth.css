@@ -1,0 +1,398 @@
+/* ============================================================
+   auth.css
+   All Authentication Components + Pages.
+   Depends on variables.css, global.css (.btn, .form-control
+   utility patterns), forms.css, animations.css (scaleIn).
+   Breakpoint behavior (stacking .auth-main) lives in responsive.css.
+   ============================================================ */
+
+/* ── Page shell ─────────────────────────────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  position: relative;
+}
+
+.auth-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.auth-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-9);
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+}
+
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-9);
+}
+
+/* ── Theme toggle ───────────────────────────────────────────── */
+.theme-toggle-wrapper {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  z-index: var(--z-topbar);
+}
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.theme-toggle:hover { background: var(--surface-2); transform: rotate(15deg); }
+
+/* ── AuthBrand ──────────────────────────────────────────────── */
+.auth-brand {
+  text-align: center;
+  margin-bottom: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary);
+  color: var(--on-color);
+  display: grid;
+  place-items: center;
+}
+.brand-content .brand-title { font-size: var(--fs-xl); font-weight: var(--fw-black); color: var(--text); }
+.brand-content .brand-subtitle { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 4px; }
+
+/* ── AuthCard ───────────────────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-8);
+  animation: scaleIn var(--transition);
+}
+.auth-card-header { margin-bottom: var(--space-6); }
+.auth-card-title { font-size: var(--fs-2xl); font-weight: var(--fw-black); color: var(--text); }
+.auth-card-subtitle { font-size: var(--fs-sm); color: var(--text-muted); margin-top: 6px; }
+.auth-card-body { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* ── AuthFooter ─────────────────────────────────────────────── */
+.auth-footer {
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.auth-footer-top {
+  display: flex;
+  gap: var(--space-6);
+  justify-content: center;
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+.auth-footer-security { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
+.auth-footer-links {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+.auth-footer-links a { color: var(--text-muted); transition: color var(--transition-fast); }
+.auth-footer-links a:hover { color: var(--color-primary); }
+.auth-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--fs-xs);
+  color: var(--text-light);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.copyright { display: flex; align-items: center; gap: 4px; }
+
+/* ── AuthHero ───────────────────────────────────────────────── */
+.auth-feature { max-width: 520px; }
+.auth-feature-header p { font-size: var(--fs-md); color: var(--text); line-height: var(--lh-loose); margin-bottom: var(--space-6); }
+.auth-feature-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.auth-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.auth-feature-item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.feature-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+  color: var(--color-primary);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.feature-content h4 { font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--text); margin-bottom: 2px; }
+.feature-content p { font-size: var(--fs-xs); color: var(--text-muted); line-height: var(--lh-normal); }
+.feature-check { color: var(--color-primary); flex-shrink: 0; margin-left: auto; margin-top: 2px; }
+
+/* ── AuthIllustration ───────────────────────────────────────── */
+.auth-illustration {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-9);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-lightest);
+  overflow: hidden;
+  text-align: center;
+}
+.auth-overlay {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+
+/* Scoped overrides so this doesn't collide with the standalone
+   .auth-brand / .brand-icon used elsewhere (see note above) */
+.auth-illustration .auth-brand { position: relative; z-index: 1; color: inherit; margin-bottom: 0; }
+.auth-illustration .auth-brand h1 { font-size: var(--fs-2xl); font-weight: var(--fw-black); margin-bottom: var(--space-3); }
+.auth-illustration .auth-brand p { font-size: var(--fs-base); opacity: .9; max-width: 420px; }
+.auth-illustration .brand-icon {
+  width: 72px; height: 72px;
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--color-lightest) 18%, transparent);
+  color: var(--color-lightest);
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--space-4);
+}
+.auth-logo { width: 72px; height: 72px; border-radius: var(--radius-xl); object-fit: cover; margin-bottom: var(--space-4); }
+
+.auth-stats {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+.auth-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-lightest) 12%, transparent);
+}
+.auth-stat-card span { font-size: var(--fs-xs); font-weight: var(--fw-semibold); }
+
+/* ── LoadingOverlay ─────────────────────────────────────────── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-fast);
+}
+.loading-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.loading-card p { font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* ── PasswordInput ──────────────────────────────────────────── */
+/* Note: this input doesn't carry the .form-control class (see
+   flagged inconsistency above), so its base look is duplicated
+   here rather than inherited from forms.css. */
+.password-wrapper { position: relative; display: flex; align-items: center; }
+.password-wrapper input {
+  width: 100%;
+  padding: 9px 40px 9px var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-base);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.password-wrapper input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+.password-wrapper input.error { border-color: var(--color-accent); }
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  padding: 4px;
+}
+.password-toggle:hover { color: var(--text); }
+.error-text { font-size: var(--fs-xs); color: var(--color-accent); margin-top: 4px; display: block; }
+
+/* ── PasswordStrength ───────────────────────────────────────── */
+.password-strength { margin-top: var(--space-3); }
+.strength-header { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 6px; }
+.strength-label { font-weight: var(--fw-bold); }
+.strength-bars { display: flex; gap: 4px; margin-bottom: var(--space-2); }
+.strength-bar { flex: 1; height: 4px; border-radius: var(--radius-full); background: var(--surface-2); transition: background var(--transition-fast); }
+.strength-rules { display: flex; flex-direction: column; gap: 4px; }
+.strength-rule { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--text-muted); }
+.strength-rule svg { flex-shrink: 0; }
+
+/* Strength levels — mapped onto the approved palette only */
+.strength-bar.very-weak, .strength-bar.weak       { background: var(--color-accent); }
+.strength-bar.fair                                { background: var(--color-secondary); }
+.strength-bar.good, .strength-bar.strong          { background: var(--color-primary); }
+.strength-label.very-weak, .strength-label.weak   { color: var(--color-accent); }
+.strength-label.fair                              { color: var(--color-secondary); }
+.strength-label.good, .strength-label.strong      { color: var(--color-primary); }
+
+/* ── RememberMe ─────────────────────────────────────────────── */
+.remember-me { display: flex; align-items: center; gap: 8px; font-size: var(--fs-sm); color: var(--text); cursor: pointer; }
+.remember-me input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer; }
+.remember-me:has(input:disabled) { opacity: .6; cursor: not-allowed; }
+
+/* ── SocialLogin ────────────────────────────────────────────── */
+.social-login { margin-top: var(--space-5); }
+.social-divider { position: relative; text-align: center; margin-bottom: var(--space-4); }
+.social-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border); }
+.social-divider span { position: relative; background: var(--surface); padding: 0 var(--space-3); font-size: var(--fs-xs); color: var(--text-muted); }
+.social-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+.social-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.social-btn:hover { background: var(--surface-2); }
+
+/* ── Auth form layout (Login, Register, ForgotPassword, etc.) ─*/
+.auth-form { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* Icon-prefixed input (email fields) — mirrors .password-wrapper */
+.input-icon { position: relative; display: flex; align-items: center; }
+.input-icon svg { position: absolute; left: 12px; color: var(--text-muted); pointer-events: none; }
+.input-icon input {
+  width: 100%;
+  padding: 9px var(--space-3) 9px 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-base);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.input-icon input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+
+/* Inline banners */
+.auth-error, .auth-success {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  border: 1px solid transparent;
+}
+.auth-error { background: var(--accent-soft); color: var(--color-danger); border-color: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+.auth-success { background: var(--primary-soft); color: var(--color-success); border-color: color-mix(in srgb, var(--color-primary) 30%, transparent); }
+
+.remember-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-sm); }
+.remember-row a { color: var(--color-primary); font-weight: var(--fw-medium); }
+.remember-row a:hover { color: var(--primary-hover); }
+
+.register-link { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); display: flex; gap: 6px; justify-content: center; margin-top: var(--space-2); }
+.register-link a { color: var(--color-primary); font-weight: var(--fw-semibold); }
+.register-link a:hover { color: var(--primary-hover); }
+
+/* ── Register wizard ───────────────────────────────────────── */
+.wizard { display: flex; justify-content: space-between; margin-bottom: var(--space-6); position: relative; }
+.wizard::before { content: ''; position: absolute; top: 16px; left: 0; right: 0; height: 2px; background: var(--border); z-index: 0; }
+.wizard-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+.wizard-step span {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border-strong);
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+.wizard-step small { font-size: var(--fs-xs); color: var(--text-muted); }
+.wizard-step.active span { background: var(--color-primary); border-color: var(--color-primary); color: var(--on-color); }
+.wizard-step.active small { color: var(--text); font-weight: var(--fw-semibold); }
+.wizard-buttons { display: flex; gap: var(--space-3); }
+.wizard-buttons .btn { flex: 1; }
+
+/* ── VerifyEmail result state ───────────────────────────────── */
+.verify-icon { display: flex; justify-content: center; margin-bottom: var(--space-4); }
+.verify-icon.success { color: var(--color-success); }
+.verify-icon.error { color: var(--color-danger); }
+.back-login { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-sm); color: var(--color-primary); margin-top: var(--space-4); }
+.back-login:hover { color: var(--primary-hover); }
+
+/* Direct-child scoped so it only targets result-state headings/
+   paragraphs (VerifyEmail), not every heading/paragraph that
+   might ever live inside a card body */
+.auth-card-body > h3 { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--text); text-align: center; margin-bottom: var(--space-2); }
+.auth-card-body > p { font-size: var(--fs-sm); color: var(--text-muted); text-align: center; margin-bottom: var(--space-2); }
+
+/* ── Status pages: AccountRejected, AccountSuspended,
+   PendingApproval, Unauthorized ─────────────────────────────── */
+.status-page { text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+.status-page p { font-size: var(--fs-sm); color: var(--text-muted); line-height: var(--lh-normal); }
+.status-page .btn { margin-top: var(--space-3); width: 100%; }
+.status-icon { margin-bottom: var(--space-2); }
+.status-icon.rejected,
+.status-icon.suspended { color: var(--color-danger); }
+.status-icon.pending,
+.status-icon.warning   { color: var(--color-secondary); }
