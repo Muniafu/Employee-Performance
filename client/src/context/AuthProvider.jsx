@@ -193,6 +193,23 @@ export default function AuthProvider({
       []
     );
 
+    const persistLogin = (token , user) => {
+
+      localStorage.setItem(
+        "ems_token",
+        token
+      );
+
+      localStorage.setItem(
+        "ems_user",
+        JSON.stringify(user)
+      );
+
+      setToken(token);
+      setUser(user);
+      connectSocket(token);
+    }
+
   /**
    * REGISTER
    */
@@ -234,6 +251,99 @@ export default function AuthProvider({
     },
     []
   );
+
+  /*
+  =========================================================
+  FORGOT PASSWORD
+  =========================================================
+  */
+
+  const forgotPassword = useCallback(
+    async (email) => {
+      return api.post(
+        "/auth/forgot-password",
+        { email }
+      );
+    },
+    []
+  );
+
+  /*
+  =========================================================
+  RESET PASSWORD
+  =========================================================
+  */
+
+  const resetPassword = useCallback(
+    async (token, password) => {
+      const { data } = await api.post(
+        `/auth/reset-password/${token}`,
+        {
+          password,
+        }
+      );
+
+      if (
+        data.data?.token &&
+        data.data?.user
+      ) {
+        localStorage.setItem(
+          "ems_token",
+          data.data.token
+        );
+
+        localStorage.setItem(
+          "ems_user",
+          JSON.stringify(data.data.user)
+        );
+
+        setToken(data.data.token);
+        setUser(data.data.user);
+
+        connectSocket(data.data.token);
+      }
+
+      return data;
+    },
+    []
+  );
+
+  /*
+  =========================================================
+  Verify Email
+  =========================================================
+  */
+ const verifyEmail = useCallback(
+
+    async (token) => {
+
+        return api.get(
+            `/auth/verify-email/${token}`
+        );
+
+    },
+
+    []
+
+  );
+
+  const resendVerification = useCallback(
+
+      async (email) => {
+
+          return api.post(
+              "/auth/resend-verification",
+              {
+                  email,
+              }
+          );
+
+      },
+
+      []
+
+  );
+
 
   /**
    * REFRESH USER
@@ -295,9 +405,13 @@ export default function AuthProvider({
       loading,
 
       login,
+      persistLogin,
       register,
+      forgotPassword,
+      resetPassword,
       logout,
-
+      verifyEmail,
+      resendVerification,
       refreshUser,
 
       isAdmin,
@@ -314,8 +428,11 @@ export default function AuthProvider({
 
       login,
       register,
+      forgotPassword,
+      resetPassword,
       logout,
-
+      verifyEmail,
+      resendVerification,
       refreshUser,
 
       isAdmin,
