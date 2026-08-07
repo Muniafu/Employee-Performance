@@ -36,7 +36,7 @@ const Stat = ({ icon, label, value, sub, color, bg, to }) => {
             style={{
               fontSize: 11,
               fontWeight: 700,
-              color: 'var(--text-muted)',
+              color: 'var(--color-text-muted)',
               textTransform: 'uppercase',
               letterSpacing: '.06em',
               marginBottom: 6
@@ -59,7 +59,7 @@ const Stat = ({ icon, label, value, sub, color, bg, to }) => {
             <p
               style={{
                 fontSize: 11,
-                color: 'var(--text-muted)',
+                color: 'var(--color-text-muted)',
                 marginTop: 4
               }}
             >
@@ -195,16 +195,10 @@ export default function Dashboard() {
       <div className="page-header">
         <div>
           <h1 className="page-title">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10
-              }}
-            >
+            <div className="page-title-content">
               <CheckCircle2
                 size={24}
-                color="var(--primary)"
+                color="var(--color-primary)"
               />
 
               <span>
@@ -226,9 +220,7 @@ export default function Dashboard() {
 
       {/* STAT CARDS */}
       <div
-        className="grid-4"
-        style={{ marginBottom: 24 }}
-      >
+        className="grid-4 dashboard-section">
         <Stat
           icon={<Clock3 size={22} />}
           label="Today"
@@ -239,8 +231,8 @@ export default function Dashboard() {
                 : 'Clocked In'
               : 'Not Started'
           }
-          color="var(--primary)"
-          bg="var(--primary-light)"
+          color="var(--color-primary)"
+          bg="var(--color-info-bg)"
           to="/attendance"
         />
 
@@ -248,8 +240,8 @@ export default function Dashboard() {
           icon={<Plane size={22} />}
           label="On Leave"
           value={onLeave.length}
-          color="var(--warning)"
-          bg="var(--warning-light)"
+          color="var(--color-warning)"
+          bg="var(--color-warning-bg)"
           to="/leave"
         />
 
@@ -257,8 +249,8 @@ export default function Dashboard() {
           icon={<Hourglass size={22} />}
           label="Pending Requests"
           value={pendingLeaves.length}
-          color="var(--danger)"
-          bg="var(--danger-light)"
+          color="var(--color-danger)"
+          bg="var(--color-danger-bg)"
           to="/leave"
         />
 
@@ -267,8 +259,8 @@ export default function Dashboard() {
             icon={<Users size={22} />}
             label="Total Employees"
             value={data.headcount?.total}
-            color="var(--success)"
-            bg="var(--success-light)"
+            color="var(--color-success)"
+            bg="var(--color-success-bg)"
             to="/employees"
           />
         )}
@@ -284,19 +276,9 @@ export default function Dashboard() {
 
             <Link
               to="/leave"
-              style={{
-                fontSize: 12,
-                color: 'var(--primary)',
-                fontWeight: 600
-              }}
+              className="card-link"  
             >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4
-                }}
-              >
+              <div className="card-link-content">
                 <span>View all</span>
 
                 <ArrowRight size={14} />
@@ -311,18 +293,9 @@ export default function Dashboard() {
               </div>
             ) : onLeave.length === 0 ? (
               <div
-                className="empty-state"
-                style={{ padding: '20px 0' }}
+                className="empty-state dashboard-empty"
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                    color: 'var(--success)'
-                  }}
-                >
+                <div className="empty-success">
                   <CheckCircle2 size={18} />
 
                   <p>No one is on leave today</p>
@@ -332,14 +305,7 @@ export default function Dashboard() {
               onLeave.map((l) => (
                 <div
                   key={l._id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    padding: '8px 0',
-                    borderBottom:
-                      '1px solid var(--border)'
-                  }}
+                  className="list-item"
                 >
                   <div className="avatar">
                     {l.employee?.user?.firstName?.[0]}
@@ -348,20 +314,13 @@ export default function Dashboard() {
 
                   <div>
                     <p
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600
-                      }}
+                    className="list-title"
                     >
                       {l.employee?.user?.firstName}{' '}
                       {l.employee?.user?.lastName}
                     </p>
 
-                    <p
-                      style={{
-                        fontSize: 11,
-                        color: 'var(--text-muted)'
-                      }}
+                    <p className="list-subtitle"
                     >
                       {l.employee?.department} ·{' '}
                       {l.leaveType}
@@ -369,8 +328,7 @@ export default function Dashboard() {
                   </div>
 
                   <span
-                    className="badge badge-warning"
-                    style={{ marginLeft: 'auto' }}
+                    className="badge badge-warning badge-right"
                   >
                     {l.totalDays}d
                   </span>
@@ -391,19 +349,9 @@ export default function Dashboard() {
 
             <Link
               to="/leave"
-              style={{
-                fontSize: 12,
-                color: 'var(--primary)',
-                fontWeight: 600
-              }}
+              className="card-link"
             >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4
-                }}
-              >
+              <div className="card-link-content">
                 <span>Manage</span>
 
                 <ArrowRight size={14} />
@@ -418,8 +366,7 @@ export default function Dashboard() {
               </div>
             ) : pendingLeaves.length === 0 ? (
               <div
-                className="empty-state"
-                style={{ padding: '20px 0' }}
+                className="empty-state dashboard-empty"
               >
                 <p>
                   All clear — no pending requests
@@ -429,23 +376,10 @@ export default function Dashboard() {
               pendingLeaves.map((l) => (
                 <div
                   key={l._id}
-                  style={{
-                    display: 'flex',
-                    justifyContent:
-                      'space-between',
-                    alignItems: 'center',
-                    padding: '10px 12px',
-                    background: 'var(--surface-2)',
-                    borderRadius: 8,
-                    marginBottom: 8
-                  }}
+                  className="list-item flex-between"
                 >
                   <div>
-                    <p
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 600
-                      }}
+                    <p className="list-title"
                     >
                       {l.employee?.user?.firstName}{' '}
                       {l.employee?.user?.lastName}
@@ -454,7 +388,7 @@ export default function Dashboard() {
                     <p
                       style={{
                         fontSize: 11,
-                        color: 'var(--text-muted)'
+                        color: 'var(--color-text-muted)'
                       }}
                     >
                       {fmt(l.startDate)} –{' '}
@@ -463,7 +397,7 @@ export default function Dashboard() {
                     </p>
                   </div>
 
-                  <span className="badge badge-warning">
+                  <span className="badge badge-warning badge-right">
                     {l.leaveType}
                   </span>
                 </div>
@@ -475,16 +409,10 @@ export default function Dashboard() {
 
       {/* ADMIN ANALYTICS */}
       {(isAdmin || isHR) && data && (
-        <div style={{ marginTop: 20 }}>
+        <div className="dashboard-section-sm">
           <div className="grid-3">
             <div className="card card-body">
-              <h3
-                style={{
-                  fontSize: 14,
-                  fontWeight: 700,
-                  marginBottom: 12
-                }}
-              >
+              <h3 clasName="section-title">
                 Headcount by Department
               </h3>
 
@@ -492,13 +420,7 @@ export default function Dashboard() {
                 (d) => (
                   <div
                     key={d._id}
-                    style={{
-                      display: 'flex',
-                      justifyContent:
-                        'space-between',
-                      padding: '4px 0',
-                      fontSize: 13
-                    }}
+                    className="analytics-row"
                   >
                     <span>
                       {d._id || 'Unassigned'}
@@ -521,26 +443,13 @@ export default function Dashboard() {
                 Quick Stats
               </h3>
 
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 8
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent:
-                      'space-between',
-                    fontSize: 13
-                  }}
-                >
+              <div className="analytics-stack">
+                <div className="analytics-row">
                   <span>Active</span>
 
                   <strong
                     style={{
-                      color: 'var(--success)'
+                      color: 'var(--color-success)'
                     }}
                   >
                     {data.headcount?.active}
@@ -559,7 +468,7 @@ export default function Dashboard() {
 
                   <strong
                     style={{
-                      color: 'var(--warning)'
+                      color: 'var(--color-warning)'
                     }}
                   >
                     {data.headcount?.onLeave}
@@ -578,7 +487,7 @@ export default function Dashboard() {
 
                   <strong
                     style={{
-                      color: 'var(--danger)'
+                      color: 'var(--color-danger)'
                     }}
                   >
                     {data.headcount?.terminated}
@@ -598,38 +507,16 @@ export default function Dashboard() {
                 Engagement
               </h3>
 
-              <div
-                style={{
-                  textAlign: 'center',
-                  padding: '12px 0'
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 36,
-                    fontWeight: 800,
-                    color: 'var(--primary)'
-                  }}
-                >
+              <div className="engagement-stack">
+                <div className="engagement-score">
                   {data.engagement?.avgNps || 0}
                 </div>
 
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: 'var(--text-muted)'
-                  }}
-                >
+                <div className="engagement-label">
                   Avg NPS Score
                 </div>
 
-                <div
-                  style={{
-                    fontSize: 12,
-                    marginTop: 8,
-                    color: 'var(--text-muted)'
-                  }}
-                >
+                <div className="engagement-meta">
                   {
                     data.engagement
                       ?.totalSurveys

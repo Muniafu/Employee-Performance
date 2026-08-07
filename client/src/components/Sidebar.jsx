@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../context/useAuth';
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 import {
   LayoutDashboard,
@@ -17,121 +17,126 @@ import {
   BarChart3,
   Settings,
   LogOut,
-} from 'lucide-react';
+  Building2,
+} from "lucide-react";
 
-const NAV = [
+const NAVIGATION = [
   {
-    section: 'Main',
+    section: "Main",
     roles: [
-      'employee',
-      'manager',
-      'hr',
-      'admin',
-      'superuser',
+      "employee",
+      "manager",
+      "hr",
+      "admin",
+      "superuser",
     ],
     links: [
       {
-        to: '/dashboard',
+        to: "/dashboard",
         icon: LayoutDashboard,
-        label: 'Dashboard',
+        label: "Dashboard",
       },
       {
-        to: '/attendance',
+        to: "/attendance",
         icon: Clock3,
-        label: 'Attendance',
+        label: "Attendance",
       },
       {
-        to: '/leave',
+        to: "/leave",
         icon: Plane,
-        label: 'Leave',
+        label: "Leave",
       },
       {
-        to: '/payroll',
+        to: "/payroll",
         icon: Wallet,
-        label: 'Payroll',
+        label: "Payroll",
       },
     ],
   },
 
   {
-    section: 'Development',
+    section: "Development",
     roles: [
-      'employee',
-      'manager',
-      'hr',
-      'admin',
-      'superuser',
+      "employee",
+      "manager",
+      "hr",
+      "admin",
+      "superuser",
     ],
     links: [
       {
-        to: '/performance',
+        to: "/performance",
         icon: Target,
-        label: 'Performance',
+        label: "Performance",
       },
       {
-        to: '/learning',
+        to: "/learning",
         icon: BookOpen,
-        label: 'Learning',
+        label: "Learning",
       },
       {
-        to: '/career',
+        to: "/career",
         icon: BriefcaseBusiness,
-        label: 'Career',
+        label: "Career",
       },
     ],
   },
 
   {
-    section: 'Organisation',
+    section: "Organisation",
     roles: [
-      'employee',
-      'manager',
-      'hr',
-      'admin',
-      'superuser',
+      "employee",
+      "manager",
+      "hr",
+      "admin",
+      "superuser",
     ],
     links: [
       {
-        to: '/engagement',
+        to: "/engagement",
         icon: Brain,
-        label: 'Engagement',
+        label: "Engagement",
       },
       {
-        to: '/wellness',
+        to: "/wellness",
         icon: HeartPulse,
-        label: 'Wellness',
+        label: "Wellness",
       },
       {
-        to: '/compliance',
+        to: "/compliance",
         icon: ShieldCheck,
-        label: 'Compliance',
+        label: "Compliance",
       },
       {
-        to: '/onboarding',
+        to: "/onboarding",
         icon: Rocket,
-        label: 'Onboarding',
+        label: "Onboarding",
       },
     ],
   },
 
   {
-    section: 'Administration',
-    roles: ['admin', 'superuser', 'hr'],
+    section: "Administration",
+    roles: [
+      "admin",
+      "hr",
+      "superuser",
+    ],
     links: [
       {
-        to: '/employees',
+        to: "/employees",
         icon: Users,
-        label: 'Employees',
+        label: "Employees",
       },
       {
-        to: '/analytics',
+        to: "/analytics",
         icon: BarChart3,
-        label: 'Analytics',
+        label: "Analytics",
       },
       {
-        to: '/admin',
+        to: "/admin",
         icon: Settings,
-        label: 'Admin Panel',
+        label: "Admin Panel",
       },
     ],
   },
@@ -140,12 +145,14 @@ const NAV = [
 export default function Sidebar({
   open,
   collapsed,
-  onClose
+  onClose,
 }) {
   const { user, logout } = useAuth();
 
-  const allNav = NAV.filter(section =>
-    section.roles.includes(user?.role)
+  const sections = NAVIGATION.filter((section) =>
+    section.roles.includes(
+      (user?.role || "").toLowerCase()
+    )
   );
 
   return (
@@ -154,136 +161,110 @@ export default function Sidebar({
         <div
           className="sidebar-overlay"
           onClick={onClose}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,.4)',
-            zIndex: 199
-          }}
+          aria-hidden="true"
         />
       )}
 
       <aside
-        className={`
-          sidebar
-          ${open ? 'mobile-open' : ''}
-          ${collapsed ? 'collapsed' : ''}
-        `}
+        className={[
+          "sidebar",
+          collapsed && "sidebar-collapsed",
+          open && "sidebar-open"
+        ]
+        .filter(Boolean).join(" ")
+      }
       >
         {/* Brand */}
-        <div className="sidebar-brand">
-          <div className="brand-icon">E</div>
 
-          <div className="brand-text">
+        <div className="sidebar-brand">
+          <div className="brand-icon">
+            <Building2 size={22} />
+          </div>
+
+          <div className="sidebar-brand-text">
             <h1>EMS</h1>
-            <span>HR System v2</span>
+
+            <span>
+              Unified HR System
+            </span>
           </div>
         </div>
 
         {/* Navigation */}
+
         <nav className="sidebar-nav">
-          {allNav.map(section => (
-            <div
+          {sections.map((section) => (
+            <section
               key={section.section}
               className="nav-section"
             >
-              <div className="nav-section-label">
+              <div className="nav-section-title">
                 {section.section}
               </div>
 
-              {section.links.map(link => {
+              {section.links.map((link) => {
                 const Icon = link.icon;
 
                 return (
                   <NavLink
                     key={link.to}
                     to={link.to}
-                    className={({ isActive }) =>
-                      `nav-link${
-                        isActive ? ' active' : ''
-                      }`
-                    }
                     onClick={onClose}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link active"
+                        : "nav-link"
+                    }
                   >
                     <span className="nav-icon">
                       <Icon size={18} />
                     </span>
 
-                    {link.label}
+                    <span className="nav-text">
+                      {link.label}
+                    </span>
                   </NavLink>
                 );
               })}
-            </div>
+            </section>
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="sidebar-footer">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-              padding: '10px 12px',
-              borderRadius: 8,
-              background: 'var(--surface-2)',
-              marginBottom: 8
-            }}
-          >
-            <div
-              className="avatar"
-              style={{ flexShrink: 0 }}
-            >
+
+        <footer className="sidebar-footer">
+          <div className="sidebar-user">
+            <div className="avatar">
               {user?.firstName?.[0]}
               {user?.lastName?.[0]}
             </div>
 
-            <div
-              style={{
-                flex: 1,
-                minWidth: 0
-              }}
-            >
-              <div
-                style={{
-                  fontWeight: 600,
-                  fontSize: 13,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {user?.firstName}{' '}
+            <div className="sidebar-user-details">
+              <div className="sidebar-user-name">
+                {user?.firstName}{" "}
                 {user?.lastName}
               </div>
 
-              <div
-                style={{
-                  fontSize: 11,
-                  color: 'var(--text-muted)',
-                  textTransform: 'capitalize'
-                }}
-              >
+              <div className="sidebar-user-role">
                 {user?.role}
               </div>
             </div>
           </div>
 
           <button
-            className="nav-link"
-            style={{
-              color: 'var(--danger)',
-              width: '100%'
-            }}
+            type="button"
             onClick={logout}
+            className="nav-link nav-link-danger"
           >
             <span className="nav-icon">
               <LogOut size={18} />
             </span>
 
-            Sign Out
+            <span className="nav-text">
+              Sign Out
+            </span>
           </button>
-        </div>
+        </footer>
       </aside>
     </>
   );

@@ -1,182 +1,134 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Moon, Sun, Menu, Bell } from 'lucide-react';
 
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/useAuth";
+import { useTheme } from "../context/useTheme";
+import { useNotifications } from "../context/useNotifications";
 
-import { useAuth }
-  from '../context/useAuth';
-
-import { useTheme }
-  from '../context/useTheme';
-
-import { useNotifications }
-  from '../context/useNotifications';
-
-export default function Navbar({
-  onMenuClick,
-}) {
-  const { user } = useAuth();
-
-  const { theme, toggle } =
-    useTheme();
-
+export default function Navbar({ onMenuClick }) {
   const navigate = useNavigate();
 
-  const notificationContext =
-    useNotifications();
+  const { user } = useAuth();
+  const { theme, toggle } = useTheme();
 
   const {
     notifications = [],
     unreadCount = 0,
     loading = false,
-    error = null,
-    readNotification,
+    error = "",
     fetchNotifications,
-  } = notificationContext || {};
+    readNotification,
+  } = useNotifications() || {};
 
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
-  const dropdownRef = useRef(null);
+  const notificationRef = useRef(null);
 
   useEffect(() => {
-    const handleOutsideClick = (e) => {
+    function handleClickOutside(event) {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target)
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
       ) {
         setOpen(false);
       }
-    };
+    }
 
     document.addEventListener(
-      'mousedown',
-      handleOutsideClick
+      "mousedown",
+      handleClickOutside
     );
 
     return () => {
       document.removeEventListener(
-        'mousedown',
-        handleOutsideClick
+        "mousedown",
+        handleClickOutside
       );
     };
   }, []);
 
-  const roleColor = {
-    superuser: 'var(--danger)',
-    admin: 'var(--primary)',
-    hr: 'var(--info)',
-    manager: 'var(--success)',
-    employee: 'var(--text-muted)',
+  const toggleNotifications = () => {
+    const nextState = !open;
+
+    setOpen(nextState);
+
+    if (nextState) {
+      fetchNotifications?.({
+        limit: 10,
+      });
+    }
+  };
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      await readNotification?.(notification._id);
+
+      if (notification.link) {
+        navigate(notification.link);
+      }
+
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
     <header className="topbar">
       <button
+        type="button"
         className="btn btn-ghost btn-icon"
         onClick={onMenuClick}
+        aria-label="Open Sidebar"
       >
-        ☰
+        <Menu size={22}/>
       </button>
 
-      <div style={{ flex: 1 }} />
+      <div className="topbar-spacer" />
 
       <button
+        type="button"
         className="btn btn-ghost btn-icon"
         onClick={toggle}
+        aria-label="Toggle Theme"
       >
-        {theme === 'dark'
-          ? '☀️'
-          : '🌙'}
+        {theme === "dark" ? <Moon /> : <Sun />}
       </button>
 
       <div
-        style={{ position: 'relative' }}
-        ref={dropdownRef}
+        className="notification-wrapper"
+        ref={notificationRef}
       >
         <button
-          className="btn btn-ghost btn-icon"
-          style={{ position: 'relative' }}
-          onClick={() => {
-            setOpen((prev) => !prev);
-
-            if (!open) {
-              fetchNotifications({
-                limit: 10,
-              });
-            }
-          }}
+          type="button"
+          className="btn btn-ghost btn-icon notification-trigger"
+          onClick={toggleNotifications}
+          aria-label="Notifications"
+          aria-haspopup="true"
+          aria-expanded={open}
         >
-          🔔
+          <Bell size={20}/>
 
           {unreadCount > 0 && (
-            <span
-              style={{
-                position: 'absolute',
-                top: 2,
-                right: 2,
-                background:
-                  'var(--danger)',
-                color: '#fff',
-                borderRadius: '50%',
-                width: 16,
-                height: 16,
-                fontSize: 9,
-                fontWeight: 800,
-                display: 'grid',
-                placeItems: 'center',
-              }}
-            >
+            <span className="notification-badge">
               {unreadCount > 9
-                ? '9+'
+                ? "9+"
                 : unreadCount}
             </span>
           )}
         </button>
 
         {open && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '110%',
-              right: 0,
-              width: 360,
-              maxHeight: 420,
-              overflowY: 'auto',
-              background:
-                'var(--surface)',
-              border:
-                '1px solid var(--border)',
-              borderRadius: 12,
-              boxShadow:
-                '0 10px 40px rgba(0,0,0,0.2)',
-              zIndex: 1000,
-              padding: 12,
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent:
-                  'space-between',
-                alignItems: 'center',
-                marginBottom: 12,
-              }}
-            >
-              <strong>
-                Notifications
-              </strong>
+          <div className="notification-dropdown">
+            <div className="notification-header">
+              <strong>Notifications</strong>
 
               <button
-                className="btn btn-sm"
+                type="button"
+                className="btn btn-sm btn-ghost"
                 onClick={() => {
-                  navigate(
-                    '/notifications'
-                  );
-
+                  navigate("/notifications");
                   setOpen(false);
                 }}
               >
@@ -185,137 +137,71 @@ export default function Navbar({
             </div>
 
             {loading && (
-              <p>
+              <p className="notification-empty">
                 Loading notifications...
               </p>
             )}
 
-            {error && (
-              <p
-                style={{
-                  color:
-                    'var(--danger)',
-                }}
-              >
+            {!loading && error && (
+              <p className="notification-error">
                 {error}
               </p>
             )}
 
             {!loading &&
+              !error &&
               notifications.length === 0 && (
-                <p
-                  style={{
-                    color:
-                      'var(--text-muted)',
-                  }}
-                >
+                <p className="notification-empty">
                   No notifications yet.
                 </p>
               )}
 
-            {Array.isArray(
-              notifications
-            ) &&
-              notifications.map((n) => (
-                <div
-                  key={n._id}
-                  onClick={async () => {
-                    await readNotification(
-                      n._id
-                    );
-
-                    if (n.link) {
-                      window.Location.href = navigate(n.link);
-                    }
-                  }}
-                  style={{
-                    padding: 12,
-                    borderRadius: 10,
-                    marginBottom: 10,
-                    cursor: 'pointer',
-                    background: n.read
-                      ? 'transparent'
-                      : 'var(--surface-2)',
-                    border: `1px solid ${
-                      n.read
-                        ? 'var(--border)'
-                        : 'var(--primary)'
-                    }`,
-                  }}
+            {!loading &&
+              notifications.map((notification) => (
+                <button
+                  key={notification._id}
+                  type="button"
+                  className="notification-item"
+                  onClick={() =>
+                    handleNotificationClick(notification)
+                  }
                 >
-                  <div
-                    style={{
-                      fontWeight: 700,
-                      marginBottom: 6,
-                    }}
-                  >
-                    {n.title}
+                  <div className="notification-title">
+                    {notification.title}
                   </div>
 
-                  <div
-                    style={{
-                      fontSize: 13,
-                      marginBottom: 6,
-                    }}
-                  >
-                    {n.message}
+                  <div className="notification-message">
+                    {notification.message}
                   </div>
 
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color:
-                        'var(--text-muted)',
-                    }}
-                  >
+                  <div className="notification-time">
                     {new Date(
-                      n.createdAt
+                      notification.createdAt
                     ).toLocaleString()}
                   </div>
-                </div>
+                </button>
               ))}
           </div>
         )}
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          paddingLeft: 12,
-          borderLeft:
-            '1px solid var(--border)',
-        }}
-      >
+      <div className="topbar-profile">
         <div className="avatar">
           {user?.firstName?.[0]}
           {user?.lastName?.[0]}
         </div>
 
-        <div style={{ lineHeight: 1.3 }}>
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-            }}
-          >
-            {user?.firstName}{' '}
-            {user?.lastName}
+        <div className="topbar-user">
+          <div className="topbar-user-name">
+            {user?.firstName} {user?.lastName}
           </div>
 
           <div
-            style={{
-              fontSize: 11,
-              color:
-                roleColor[user?.role] ||
-                'var(--text-muted)',
-              fontWeight: 700,
-              textTransform:
-                'capitalize',
-            }}
+            className={`topbar-user-role role-${(
+              user?.role || "employee"
+            ).toLowerCase()}`}
           >
-            {user?.role}
+            {user?.role || "Employee"}
           </div>
         </div>
       </div>
