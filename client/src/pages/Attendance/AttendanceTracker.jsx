@@ -220,7 +220,7 @@ export default function AttendanceTracker() {
 
     const token =
     localStorage.getItem(
-    'token'
+    'ems_token'
     );
 
     if (

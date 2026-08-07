@@ -118,8 +118,10 @@ export default function AuthProvider({
 
           if (!mounted) return;
 
-          const authUser =
-            data.data.user;
+          const authUser = {
+            ...data.data.user,
+            hasEmployeeProfile: !!data.data.employee,
+          };
 
           setUser(authUser);
 
@@ -170,7 +172,10 @@ export default function AuthProvider({
           data.data.token;
 
         const authUser =
-          data.data.user;
+          {
+            ...data.data.user,
+            hasEmployeeProfile: !!data.data.employee,
+          };
 
         localStorage.setItem(
           'ems_token',
@@ -355,7 +360,10 @@ export default function AuthProvider({
         await api.get('/auth/me');
 
       const authUser =
-        data.data.user;
+        {
+          ...data.data.user,
+          hasEmployeeProfile: !!data.data.employee,
+        };
 
       setUser(authUser);
 

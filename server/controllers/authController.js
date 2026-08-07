@@ -18,11 +18,19 @@ const sendAuth = (user, code, res) => {
 
   delete safeUser.password;
 
+  const employee = Employee.findOne({
+    user: user._id,
+  }).select('_id employeeId department position status');
+
   res.status(code).json({
     success: true,
     data: {
       token,
-      user: safeUser,
+      user: {
+        ...safeUser,
+        hasEmployeeProfile: !!employee,
+      },
+      employee,
     },
   });
 };
@@ -210,7 +218,7 @@ exports.login = async (req, res, next) => {
       validateBeforeSave: false,
     });
 
-    sendAuth(user, 200, res);
+    await sendAuth(user, 200, res);
 
   } catch (err) {
     next(err);
