@@ -6,6 +6,8 @@ const {
   getMe,
   changePassword,
   registerAdmin,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/authController');
 
 const auth = require('../middleware/authMiddleware');
@@ -31,6 +33,18 @@ router.post(
   auth,
   authorize('admin', 'superuser'),
   registerAdmin
+);
+
+router.post(
+    "/forgot-password",
+    authLimiter,
+    forgotPassword
+);
+
+router.post(
+    "/reset-password/:token",
+    authLimiter,
+    resetPassword
 );
 
 module.exports = router;

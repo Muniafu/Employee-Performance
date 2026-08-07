@@ -103,6 +103,38 @@ const templates = {
     `,
   }),
 
+  passwordReset: (name, link) => ({
+
+    subject: "Reset Your Password",
+
+    html: `
+        <h2>Password Reset</h2>
+
+        <p>Hello ${name},</p>
+
+        <p>
+            A request was made to reset your password.
+        </p>
+
+        <p>
+            Click below.
+        </p>
+
+        <a href="${link}">
+            Reset Password
+        </a>
+
+        <p>
+            This link expires in 15 minutes.
+        </p>
+
+        <p>
+            If you didn't request this,
+            ignore this email.
+        </p>
+    `,
+  }),
+
   welcome: (name) => ({
     subject: 'Welcome to EMS',
     html: `

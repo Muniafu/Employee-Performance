@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema(
   {
@@ -26,7 +27,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6,
+      minlength: 8,
       select: false,
     },
 
@@ -79,6 +80,31 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: {
       type: Date,
     },
+
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+
+    passwordResetExpires: {
+      type: Date,
+      select: false,
+    },
+
+    emailVerificationToken: {
+      type: String,
+      select: false,
+    },
+
+    emailVerificationExpires: {
+      type: Date,
+      select: false,
+    },
+
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -111,6 +137,50 @@ userSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
+userSchema.methods.createPasswordResetToken = function () {
+
+    const resetToken =
+        crypto.randomBytes(32).toString("hex");
+
+    this.passwordResetToken =
+        crypto
+            .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+
+    this.passwordResetExpires =
+        Date.now() + 15 * 60 * 1000;
+
+    return resetToken;
+
+};
+
+userSchema.methods.clearPasswordReset = function () {
+
+    this.passwordResetToken = undefined;
+
+    this.passwordResetExpires = undefined;
+
+};
+
+userSchema.methods.createEmailVerificationToken = function () {
+
+    const token =
+        crypto.randomBytes(32).toString("hex");
+
+    this.emailVerificationToken =
+        crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+    this.emailVerificationExpires =
+        Date.now() + 24 * 60 * 60 * 1000;
+
+    return token;
+
+};
+
 userSchema.methods.changedPasswordAfter = function (jwtTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
@@ -123,5 +193,10 @@ userSchema.methods.changedPasswordAfter = function (jwtTimestamp) {
 
   return false;
 };
+
+userSchema.index({
+    passwordResetToken: 1,
+    passwordResetExpires: 1,
+});
 
 module.exports = mongoose.model('User', userSchema);

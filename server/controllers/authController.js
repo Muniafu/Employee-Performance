@@ -1,6 +1,11 @@
 const User = require('../models/User');
 const Employee = require('../models/Employee');
+const crypto = require("crypto");
 
+const {
+    sendEmail,
+    templates,
+} = require("../utils/emailService");
 const { signToken } = require('../utils/token');
 
 const sendAuth = (user, code, res) => {
@@ -358,4 +363,225 @@ exports.changePassword = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+/*
+=========================================================
+FORGOT PASSWORD
+=========================================================
+*/
+
+exports.forgotPassword = async (req, res, next) => {
+
+  try {
+
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required.",
+      });
+    }
+
+    const user = await User
+      .findOne({ email })
+      .select("+passwordResetToken +passwordResetExpires");
+
+    /**
+     * Prevent account enumeration.
+     */
+
+    if (!user) {
+
+      return res.status(200).json({
+        success: true,
+        message:
+          "If an account exists for this email, a reset link has been sent.",
+      });
+
+    }
+
+    /**
+     * Create secure token.
+     */
+
+    const resetToken =
+      user.createPasswordResetToken();
+
+    await user.save({
+      validateBeforeSave: false,
+    });
+
+    /**
+     * Frontend URL
+     */
+
+    const resetURL =
+      `${process.env.CLIENT_URL || "http://localhost:5173"}/reset-password/${resetToken}`;
+
+    const emailTemplate =
+      templates.passwordReset(
+        user.fullName,
+        resetURL
+      );
+
+    const result =
+      await sendEmail({
+
+        to: user.email,
+
+        subject:
+          emailTemplate.subject,
+
+        html:
+          emailTemplate.html,
+
+      });
+
+    /**
+     * Email failed.
+     */
+
+    if (!result.success) {
+
+      user.clearPasswordReset();
+
+      await user.save({
+        validateBeforeSave: false,
+      });
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          "Unable to send reset email.",
+
+      });
+
+    }
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        "If an account exists for this email, a reset link has been sent.",
+
+    });
+
+  }
+
+  catch (err) {
+
+    next(err);
+
+  }
+
+};
+
+/*
+=========================================================
+RESET PASSWORD
+=========================================================
+*/
+
+exports.resetPassword = async (req, res, next) => {
+
+  try {
+
+    const { token } = req.params;
+
+    const { password } =
+      req.body;
+
+    if (!password) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        message:
+          "New password is required.",
+
+      });
+
+    }
+
+    /**
+     * Hash incoming token.
+     */
+
+    const hashedToken =
+      crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
+
+    const user =
+      await User.findOne({
+
+        passwordResetToken:
+          hashedToken,
+
+        passwordResetExpires:
+          {
+            $gt: Date.now(),
+          },
+
+      })
+      .select(
+        "+passwordResetToken +passwordResetExpires +password"
+      );
+
+    if (!user) {
+
+      return res.status(400).json({
+
+        success: false,
+
+        message:
+          "Reset link is invalid or has expired.",
+
+      });
+
+    }
+
+    /**
+     * Update password.
+     */
+
+    user.password =
+      password;
+
+    user.clearPasswordReset();
+
+    await user.save();
+
+    /**
+     * Auto login.
+     */
+
+    user.lastLogin =
+      new Date();
+
+    await user.save({
+      validateBeforeSave: false,
+    });
+
+    sendAuth(
+      user,
+      200,
+      res
+    );
+
+  }
+
+  catch (err) {
+
+    next(err);
+
+  }
+
 };
