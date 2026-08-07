@@ -43,7 +43,7 @@ export default function Notifications() {
         <p
           style={{
             color:
-              'var(--danger)',
+              'var(--color-danger)',
           }}
         >
           {error}
@@ -54,15 +54,7 @@ export default function Notifications() {
 
   return (
     <div className="card">
-      <div
-        style={{
-          display: 'flex',
-          justifyContent:
-            'space-between',
-          alignItems: 'center',
-          marginBottom: 20,
-        }}
-      >
+      <div className="flex-between notification-header">
         <h2>Notifications</h2>
 
         {notifications.length >
@@ -80,25 +72,18 @@ export default function Notifications() {
 
       {notifications.length ===
       0 ? (
-        <div
+        <div className="notification-empty"
           style={{
             padding: 40,
             textAlign: 'center',
             color:
-              'var(--text-muted)',
+              'var(--color-text-muted)',
           }}
         >
           No notifications available.
         </div>
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection:
-              'column',
-            gap: 12,
-          }}
-        >
+        <div className="notification-list">
           {notifications.map(
             (notification) => (
               <div
@@ -110,12 +95,12 @@ export default function Notifications() {
                   borderLeft:
                     notification.read
                       ? '4px solid var(--border)'
-                      : '4px solid var(--primary)',
+                      : '4px solid var(--color-primary)',
 
                   background:
                     notification.read
                       ? 'var(--surface)'
-                      : 'var(--surface-2)',
+                      : 'var(--color-bg-surface-raised)',
 
                   cursor:
                     'pointer',
@@ -126,59 +111,26 @@ export default function Notifications() {
                   )
                 }
               >
-                <div
-                  style={{
-                    display:
-                      'flex',
-
-                    justifyContent:
-                      'space-between',
-
-                    marginBottom: 8,
-                  }}
-                >
+                <div className="notification-item-header">
                   <strong>
                     {notification.title ||
                       'Notification'}
                   </strong>
 
                   {!notification.read && (
-                    <span
-                      style={{
-                        color:
-                          'var(--primary)',
-
-                        fontSize: 12,
-
-                        fontWeight: 700,
-                      }}
-                    >
+                    <span className="notification-new">
                       NEW
                     </span>
                   )}
                 </div>
 
-                <div
-                  style={{
-                    color:
-                      'var(--text-secondary)',
-
-                    marginBottom: 8,
-                  }}
-                >
+                <div className="notification-message">
                   {
                     notification.message
                   }
                 </div>
 
-                <div
-                  style={{
-                    fontSize: 12,
-
-                    color:
-                      'var(--text-muted)',
-                  }}
-                >
+                <div className="notification-time">
                   {new Date(
                     notification.createdAt
                   ).toLocaleString()}

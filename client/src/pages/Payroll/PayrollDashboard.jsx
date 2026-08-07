@@ -244,7 +244,7 @@ export default function PayrollDashboard() {
                               <div
                                   style={{
                                       fontSize:12,
-                                      color:'var(--text-muted)',
+                                      color:'var(--color-text-muted)',
                                   }}
                               >
                                   {row.employeeSnapshot?.employeeNumber}

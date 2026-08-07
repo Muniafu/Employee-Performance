@@ -4,16 +4,10 @@ export default function ShiftScheduler() {
   return (
     <div>
       <div className="page-header">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
+        <div className="page-title-content">
           <CalendarDays
             size={28}
-            color="var(--primary)"
+            color="var(--color-primary)"
           />
 
           <h1 className="page-title">
@@ -23,17 +17,10 @@ export default function ShiftScheduler() {
       </div>
 
       <div className="card card-body empty-state">
-        <div
-          className="empty-icon"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <div className="empty-icon flex-center">
           <CalendarDays
             size={52}
-            color="var(--primary)"
+            color="var(--color-primary)"
           />
         </div>
 

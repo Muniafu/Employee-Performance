@@ -76,12 +76,12 @@ export default function EmployeeList() {
         {isAdmin && <button className="btn btn-primary" onClick={()=>setShowAdd(true)}>+ Add Employee</button>}
       </div>
 
-      <div style={{ display:'flex', gap:12, marginBottom:16, flexWrap:'wrap' }}>
-        <div className="search-wrap" style={{ flex:1, minWidth:200 }}>
+      <div className="toolbar">
+        <div className="search-wrap search-grow">
           <span className="search-icon">🔍</span>
           <input className="form-control" placeholder="Search by name or email…" value={search} onChange={e=>setSearch(e.target.value)} />
         </div>
-        <select className="form-control form-select" style={{ width:180 }} value={deptFilter} onChange={e=>setDeptFilter(e.target.value)}>
+        <select className="form-control form-select filter-select" value={deptFilter} onChange={e=>setDeptFilter(e.target.value)}>
           <option value="">All Departments</option>
           {DEPTS.map(d=><option key={d}>{d}</option>)}
         </select>
@@ -90,24 +90,24 @@ export default function EmployeeList() {
       <div className="card">
         <Table loading={loading} data={employees} emptyMsg="No employees found." columns={[
           { label:'Employee', render: e => (
-            <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <div className="employee-card">
               <div className="avatar">{e.user?.firstName?.[0]}{e.user?.lastName?.[0]}</div>
               <div>
-                <div style={{ fontWeight:600, fontSize:13 }}>{e.user?.firstName} {e.user?.lastName}</div>
-                <div style={{ fontSize:11, color:'var(--text-muted)' }}>{e.user?.email}</div>
+                <div className="employee-name">{e.user?.firstName} {e.user?.lastName}</div>
+                <div className="employee-email">{e.user?.email}</div>
               </div>
             </div>
           )},
-          { label:'Employee ID', render: e => <code style={{ fontSize:12, color:'var(--text-muted)' }}>{e.employeeId}</code> },
+          { label:'Employee ID', render: e => <code className="employee-id">{e.employeeId}</code> },
           { label:'Department', key:'department' },
           { label:'Position', key:'position' },
           { label:'Role', render: e => <span className={`badge ${roleColor[e.user?.role]||'badge-neutral'}`} style={{textTransform:'capitalize'}}>{e.user?.role}</span> },
           { label:'Status', render: e => <span className={`badge ${e.status==='active'?'badge-success':e.status==='on_leave'?'badge-warning':'badge-danger'}`} style={{textTransform:'capitalize'}}>{e.status}</span> },
           { label:'Start Date', render: e => new Date(e.startDate||e.createdAt).toLocaleDateString('en-KE',{month:'short',year:'numeric'}) },
           { label:'', render: e => (
-            <div style={{ display:'flex', gap:6 }}>
+            <div className="button-group-sm">
               <button className="btn btn-sm btn-outline" onClick={()=>navigate(`/employees/${e._id}`)}>View</button>
-              {isAdmin && e.status==='active' && <button className="btn btn-sm btn-danger" style={{ background:'none', color:'var(--danger)', border:'1px solid var(--danger)' }} onClick={()=>handleDeactivate(e._id)}>Deactivate</button>}
+              {isAdmin && e.status==='active' && <button className="btn btn-sm btn-danger-outline"  onClick={()=>handleDeactivate(e._id)}>Deactivate</button>}
             </div>
           )},
         ]} />

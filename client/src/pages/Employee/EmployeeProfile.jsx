@@ -68,32 +68,32 @@ export default function EmployeeProfile() {
         )}
       </div>
 
-      <div style={{ display:'grid', gridTemplateColumns:'280px 1fr', gap:20, alignItems:'start' }}>
+      <div className="profile-layout">
         {/* Avatar card */}
-        <div className="card card-body" style={{ textAlign:'center' }}>
-          <div className="avatar avatar-xl" style={{ margin:'0 auto 12px' }}>
+        <div className="card card-body profile-sidebar">
+          <div className="avatar avatar-xl profile-avatar">
             {u.firstName?.[0]}{u.lastName?.[0]}
           </div>
-          <h3 style={{ fontSize:16, fontWeight:700 }}>{u.firstName} {u.lastName}</h3>
-          <p style={{ fontSize:13, color:'var(--text-muted)', marginBottom:4 }}>{profile.position||'No position'}</p>
-          <p style={{ fontSize:12, color:'var(--text-muted)' }}>{profile.department||'No department'}</p>
+          <h3 className="profile-name">{u.firstName} {u.lastName}</h3>
+          <p className="profile-position">{profile.position||'No position'}</p>
+          <p className="profile-department">{profile.department||'No department'}</p>
           <div className="divider" />
-          <div style={{ display:'flex', flexDirection:'column', gap:6, fontSize:13 }}>
-            <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'var(--text-muted)' }}>Role</span><span className={`badge badge-${u.role==='admin'?'primary':u.role==='hr'?'info':'neutral'}`} style={{textTransform:'capitalize'}}>{u.role}</span></div>
-            <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'var(--text-muted)' }}>Status</span><span className={`badge ${profile.status==='active'?'badge-success':'badge-warning'}`} style={{textTransform:'capitalize'}}>{profile.status}</span></div>
-            {isAdmin && <div style={{ display:'flex', justifyContent:'space-between' }}><span style={{ color:'var(--text-muted)' }}>Salary</span><strong>KES {profile.salary?.toLocaleString()||0}</strong></div>}
+          <div className="profile-stats">
+            <div className="flex-between"><span style={{ color:'var(--color-text-muted)' }}>Role</span><span className={`badge badge-${u.role==='admin'?'primary':u.role==='hr'?'info':'neutral'}`} style={{textTransform:'capitalize'}}>{u.role}</span></div>
+            <div className="flex-between"><span style={{ color:'var(--color-text-muted)' }}>Status</span><span className={`badge ${profile.status==='active'?'badge-success':'badge-warning'}`} style={{textTransform:'capitalize'}}>{profile.status}</span></div>
+            {isAdmin && <div className="flex-between"><span style={{ color:'var(--color-text-muted)' }}>Salary</span><strong>KES {profile.salary?.toLocaleString()||0}</strong></div>}
           </div>
           <div className="divider" />
-          <div style={{ fontSize:12, color:'var(--text-muted)', textAlign:'left' }}>
+          <div className="profile-contact">
             <p>📧 {u.email}</p>
             <p style={{ marginTop:4 }}>📱 {profile.phone||'—'}</p>
             <p style={{ marginTop:4 }}>📍 {profile.address||'—'}</p>
           </div>
           <div className="divider" />
-          <div style={{ fontSize:12, color:'var(--text-muted)', textAlign:'left' }}>
+          <div style={{ fontSize:12, color:'var(--color-text-muted)', textAlign:'left' }}>
             <p style={{ fontWeight:700, marginBottom:4 }}>Leave Balance</p>
             {Object.entries(profile.leaveBalance||{}).map(([k,v]) => (
-              <div key={k} style={{ display:'flex', justifyContent:'space-between', marginBottom:2 }}>
+              <div key={k} className="flex-between profile-balance-row">
                 <span style={{ textTransform:'capitalize' }}>{k}</span><strong>{v} days</strong>
               </div>
             ))}
@@ -101,9 +101,9 @@ export default function EmployeeProfile() {
         </div>
 
         {/* Edit form / Info */}
-        <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+        <div className="profile-content">
           <div className="card card-body">
-            <h3 style={{ fontSize:14, fontWeight:700, marginBottom:16 }}>Work Information</h3>
+            <h3 className="section-title">Work Information</h3>
             {editing ? (
               <div>
                 <div className="form-row">
@@ -121,16 +121,16 @@ export default function EmployeeProfile() {
                 <div className="form-group"><label className="form-label">Address</label><input className="form-control" value={form.address} onChange={set('address')} /></div>
               </div>
             ) : (
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 24px', fontSize:13 }}>
+              <div className="profile-grid-3">
                 {[['Department', profile.department],['Position', profile.position],['Phone', profile.phone],['Address', profile.address],['Started', profile.startDate ? new Date(profile.startDate).toLocaleDateString('en-KE') : '—'],['DOB', profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString('en-KE') : '—']].map(([l,v])=>(
-                  <div key={l}><span style={{ color:'var(--text-muted)', fontSize:11, fontWeight:600, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</span><p style={{ fontWeight:500 }}>{v||'—'}</p></div>
+                  <div key={l}><span className="profile-label">{l}</span><p className="profile-value">{v||'—'}</p></div>
                 ))}
               </div>
             )}
           </div>
 
           <div className="card card-body">
-            <h3 style={{ fontSize:14, fontWeight:700, marginBottom:16 }}>Emergency Contact</h3>
+            <h3 className="section-title">Emergency Contact</h3>
             {editing ? (
               <div className="form-row-3">
                 <div className="form-group"><label className="form-label">Name</label><input className="form-control" value={form.emergencyContact?.name||''} onChange={setEC('name')} /></div>
@@ -138,9 +138,9 @@ export default function EmployeeProfile() {
                 <div className="form-group"><label className="form-label">Relationship</label><input className="form-control" value={form.emergencyContact?.relationship||''} onChange={setEC('relationship')} /></div>
               </div>
             ) : (
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'8px 24px', fontSize:13 }}>
+              <div className="profile-grid">
                 {[['Name', profile.emergencyContact?.name],['Phone', profile.emergencyContact?.phone],['Relationship', profile.emergencyContact?.relationship]].map(([l,v])=>(
-                  <div key={l}><span style={{ color:'var(--text-muted)', fontSize:11, fontWeight:600, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</span><p style={{ fontWeight:500 }}>{v||'—'}</p></div>
+                  <div key={l}><span className="profile-label">{l}</span><p className="profile-value">{v||'—'}</p></div>
                 ))}
               </div>
             )}
@@ -148,10 +148,10 @@ export default function EmployeeProfile() {
 
           {isAdmin && (
             <div className="card card-body">
-              <h3 style={{ fontSize:14, fontWeight:700, marginBottom:16 }}>Bank & Tax Details</h3>
-              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 24px', fontSize:13 }}>
+              <h3 className="section-title">Bank & Tax Details</h3>
+              <div className="profile-grid">
                 {[['Bank', profile.bankDetails?.bankName],['Account', profile.bankDetails?.accountNumber],['KRA PIN', profile.taxPin],['NSSF No.', profile.nssfNumber],['NHIF No.', profile.nhifNumber]].map(([l,v])=>(
-                  <div key={l}><span style={{ color:'var(--text-muted)', fontSize:11, fontWeight:600, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</span><p style={{ fontWeight:500 }}>{v||'—'}</p></div>
+                  <div key={l}><span className="profile-label">{l}</span><p className="profile-value">{v||'—'}</p></div>
                 ))}
               </div>
             </div>

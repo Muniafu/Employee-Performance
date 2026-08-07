@@ -105,17 +105,17 @@ export default function PolicyAcknowledgment() {
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10 }}>
             <div>
               <span style={{ fontSize:15, fontWeight:700 }}>Your Compliance Status</span>
-              <span style={{ fontSize:13, color:'var(--text-muted)', marginLeft:12 }}>{doneCount} of {items.length} policies acknowledged</span>
+              <span style={{ fontSize:13, color:'var(--color-text-muted)', marginLeft:12 }}>{doneCount} of {items.length} policies acknowledged</span>
             </div>
-            <span style={{ fontSize:20, fontWeight:800, color: doneCount===items.length ? 'var(--success)' : 'var(--warning)' }}>
+            <span style={{ fontSize:20, fontWeight:800, color: doneCount===items.length ? 'var(--color-success)' : 'var(--color-warning)' }}>
               {items.length > 0 ? Math.round((doneCount/items.length)*100) : 0}%
             </span>
           </div>
           <div className="progress-bar" style={{ height:10 }}>
-            <div className="progress-fill" style={{ width:`${items.length > 0 ? (doneCount/items.length)*100 : 0}%`, background: doneCount===items.length ? 'var(--success)' : 'var(--primary)' }} />
+            <div className="progress-fill" style={{ width:`${items.length > 0 ? (doneCount/items.length)*100 : 0}%`, background: doneCount===items.length ? 'var(--color-success)' : 'var(--color-primary)' }} />
           </div>
           {doneCount === items.length && items.length > 0 && (
-            <p style={{ marginTop:10, fontSize:13, color:'var(--success)', fontWeight:600 }}>🎉 Fully compliant — all policies acknowledged!</p>
+            <p style={{ marginTop:10, fontSize:13, color:'var(--color-success)', fontWeight:600 }}>🎉 Fully compliant — all policies acknowledged!</p>
           )}
         </div>
       )}
@@ -135,12 +135,12 @@ export default function PolicyAcknowledgment() {
                   {mandatory.map(item => {
                     const acked = hasAcknowledged(item);
                     return (
-                      <div key={item._id} className="card card-body" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap', borderLeft:`4px solid ${acked ? 'var(--success)' : 'var(--danger)'}` }}>
+                      <div key={item._id} className="card card-body" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:16, flexWrap:'wrap', borderLeft:`4px solid ${acked ? 'var(--color-success)' : 'var(--color-danger)'}` }}>
                         <div style={{ display:'flex', alignItems:'center', gap:14, flex:1, minWidth:0 }}>
                           <div style={{ fontSize:28, flexShrink:0 }}>{TYPE_ICON[item.type]||'📄'}</div>
                           <div style={{ minWidth:0 }}>
                             <div style={{ fontWeight:700, fontSize:14, marginBottom:2 }}>{item.title}</div>
-                            <div style={{ fontSize:12, color:'var(--text-muted)', display:'flex', flexWrap:'wrap', gap:10 }}>
+                            <div style={{ fontSize:12, color:'var(--color-text-muted)', display:'flex', flexWrap:'wrap', gap:10 }}>
                               <span className={`badge ${TYPE_COLOR[item.type]||'badge-neutral'}`} style={{ textTransform:'capitalize' }}>{item.type}</span>
                               <span>v{item.version}</span>
                               <span>Effective: {item.effectiveDate ? new Date(item.effectiveDate).toLocaleDateString('en-KE') : '—'}</span>
@@ -181,7 +181,7 @@ export default function PolicyAcknowledgment() {
                           <div style={{ fontSize:24 }}>{TYPE_ICON[item.type]||'📄'}</div>
                           <div>
                             <div style={{ fontWeight:600, fontSize:13 }}>{item.title}</div>
-                            <div style={{ fontSize:11, color:'var(--text-muted)' }}>v{item.version} · {item.type}</div>
+                            <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>v{item.version} · {item.type}</div>
                           </div>
                         </div>
                         <div style={{ display:'flex', gap:8 }}>
@@ -220,10 +220,10 @@ export default function PolicyAcknowledgment() {
             </button>
           </>}
         >
-          <div style={{ marginBottom:16, padding:'12px 16px', background:'var(--surface-2)', borderRadius:8, fontSize:13, lineHeight:1.7, maxHeight:200, overflowY:'auto' }}>
+          <div style={{ marginBottom:16, padding:'12px 16px', background:'var(--color-bg-surface-raised)', borderRadius:8, fontSize:13, lineHeight:1.7, maxHeight:200, overflowY:'auto' }}>
             {selected.content || selected.description || 'Please read and acknowledge this policy.'}
           </div>
-          <div style={{ padding:'10px 14px', background:'var(--warning-light)', borderRadius:8, fontSize:12, color:'var(--warning)', marginBottom:16 }}>
+          <div style={{ padding:'10px 14px', background:'var(--color-warning-bg)', borderRadius:8, fontSize:12, color:'var(--color-warning)', marginBottom:16 }}>
             ⚠️ By signing, you confirm you have read and understood this policy. This action is logged and time-stamped.
           </div>
           <div className="form-group">
@@ -237,7 +237,7 @@ export default function PolicyAcknowledgment() {
             />
             <p className="form-hint">This serves as your digital signature.</p>
           </div>
-          <div style={{ fontSize:12, color:'var(--text-muted)' }}>
+          <div style={{ fontSize:12, color:'var(--color-text-muted)' }}>
             Version {selected.version} · Effective {selected.effectiveDate ? new Date(selected.effectiveDate).toLocaleDateString('en-KE') : '—'}
           </div>
         </Modal>
@@ -248,32 +248,32 @@ export default function PolicyAcknowledgment() {
         <Modal open onClose={() => { setStatus(false); setStatusData(null); }} title={`Compliance Status — ${statusData.title}`}>
           <div className="grid-3" style={{ marginBottom:16 }}>
             {[
-              { label:'Total Employees', value: statusData.totalEmployees, color:'var(--primary)' },
-              { label:'Acknowledged',    value: statusData.acknowledged,   color:'var(--success)' },
-              { label:'Pending',         value: statusData.pending,         color:'var(--danger)' },
+              { label:'Total Employees', value: statusData.totalEmployees, color:'var(--color-primary)' },
+              { label:'Acknowledged',    value: statusData.acknowledged,   color:'var(--color-success)' },
+              { label:'Pending',         value: statusData.pending,         color:'var(--color-warning)' },
             ].map(s => (
-              <div key={s.label} style={{ textAlign:'center', padding:'12px', background:'var(--surface-2)', borderRadius:8 }}>
+              <div key={s.label} style={{ textAlign:'center', padding:'12px', background:'var(--color-bg-surface-raised)', borderRadius:8 }}>
                 <div style={{ fontSize:28, fontWeight:800, color:s.color }}>{s.value}</div>
-                <div style={{ fontSize:11, color:'var(--text-muted)', marginTop:2 }}>{s.label}</div>
+                <div style={{ fontSize:11, color:'var(--color-text-muted)', marginTop:2 }}>{s.label}</div>
               </div>
             ))}
           </div>
           <div style={{ marginBottom:12 }}>
             <div style={{ display:'flex', justifyContent:'space-between', fontSize:13, marginBottom:6 }}>
               <span style={{ fontWeight:600 }}>Completion</span>
-              <span style={{ fontWeight:700, color:'var(--primary)' }}>{statusData.completionRate}</span>
+              <span style={{ fontWeight:700, color:'var(--color-primary)' }}>{statusData.completionRate}</span>
             </div>
             <div className="progress-bar" style={{ height:10 }}>
-              <div className="progress-fill" style={{ width: statusData.completionRate, background: parseInt(statusData.completionRate) === 100 ? 'var(--success)' : 'var(--primary)' }} />
+              <div className="progress-fill" style={{ width: statusData.completionRate, background: parseInt(statusData.completionRate) === 100 ? 'var(--color-success)' : 'var(--color-primary)' }} />
             </div>
           </div>
           {statusData.acknowledgments?.length > 0 && (
             <div style={{ maxHeight:200, overflowY:'auto' }}>
-              <p style={{ fontSize:12, fontWeight:700, color:'var(--text-muted)', marginBottom:8, textTransform:'uppercase', letterSpacing:'.06em' }}>Acknowledgments</p>
+              <p style={{ fontSize:12, fontWeight:700, color:'var(--color-text-muted)', marginBottom:8, textTransform:'uppercase', letterSpacing:'.06em' }}>Acknowledgments</p>
               {statusData.acknowledgments.map((a, i) => (
                 <div key={i} style={{ display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:'1px solid var(--border)', fontSize:12 }}>
                   <span style={{ fontWeight:600 }}>{a.signature || '—'}</span>
-                  <span style={{ color:'var(--text-muted)' }}>{a.acknowledgedAt ? new Date(a.acknowledgedAt).toLocaleDateString('en-KE') : '—'}</span>
+                  <span style={{ color:'var(--color-text-muted)' }}>{a.acknowledgedAt ? new Date(a.acknowledgedAt).toLocaleDateString('en-KE') : '—'}</span>
                 </div>
               ))}
             </div>

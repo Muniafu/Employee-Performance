@@ -375,16 +375,10 @@ export default function AttendanceTracker() {
     <div>
 
       <div className="page-header">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
+        <div className="page-title-content">
           <Clock3
             size={28}
-            color="var(--primary)"
+            color="var(--color-primary)"
           />
 
           <div>
@@ -411,15 +405,7 @@ export default function AttendanceTracker() {
           >
             <div className="card-body">
 
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent:
-                    'space-between',
-                  flexWrap: 'wrap',
-                  gap: 20,
-                }}
-              >
+              <div className="attendance-header">
 
                 <div>
 
@@ -427,19 +413,13 @@ export default function AttendanceTracker() {
                     style={{
                       fontSize: 12,
                       color:
-                        'var(--text-muted)',
+                        'var(--color-text-muted)',
                     }}
                   >
                     TODAY
                   </p>
 
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 24,
-                      flexWrap: 'wrap',
-                    }}
-                  >
+                  <div className="attendance-summary">
 
                     <div>
                       <p>Clock In</p>
@@ -492,14 +472,7 @@ export default function AttendanceTracker() {
                   </div>
                 </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection:
-                      'column',
-                    gap: 10,
-                  }}
-                >
+                <div className="attendance-actions">
 
                   <input
                     className="form-control"
@@ -513,10 +486,7 @@ export default function AttendanceTracker() {
                   />
 
                   <div
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                    }}
+                    className="attendance-actions"
                   >
 
                     <button
@@ -676,7 +646,7 @@ export default function AttendanceTracker() {
       style={{
       marginBottom:16,
       border:
-      '1px solid var(--warning)'
+      '1px solid var(--color-warning)'
       }}
       >
 

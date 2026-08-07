@@ -75,10 +75,10 @@ export default function WellnessDashboard() {
   const spotsLeft = (p) => Math.max(0, p.maxCapacity - (p.enrollments?.length || 0));
 
   const statsCards = [
-    { label: 'Total Programs', value: programs.length, icon: '💪', color: 'var(--primary)', bg: 'var(--primary-light)' },
-    { label: 'Mental Health', value: programs.filter(p=>p.category==='mental_health').length, icon: '🧘', color: 'var(--info)', bg: 'var(--info-light)' },
-    { label: 'Physical',      value: programs.filter(p=>p.category==='physical').length,      icon: '🏋️', color: 'var(--success)', bg: 'var(--success-light)' },
-    { label: 'EAP Resources', value: programs.filter(p=>p.category==='eap').length,           icon: '☎️', color: 'var(--danger)', bg: 'var(--danger-light)' },
+    { label: 'Total Programs', value: programs.length, icon: '💪', color: 'var(--color-primary)', bg: 'var(--color-info-bg)' },
+    { label: 'Mental Health', value: programs.filter(p=>p.category==='mental_health').length, icon: '🧘', color: 'var(--color-info)', bg: 'var(--color-info-light)' },
+    { label: 'Physical',      value: programs.filter(p=>p.category==='physical').length,      icon: '🏋️', color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
+    { label: 'EAP Resources', value: programs.filter(p=>p.category==='eap').length,           icon: '☎️', color: 'var(--color-danger)', bg: 'var(--color-danger-bg)' },
   ];
 
   return (
@@ -99,7 +99,7 @@ export default function WellnessDashboard() {
           <div key={s.label} className="stat-card">
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
               <div>
-                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:6 }}>{s.label}</p>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:6 }}>{s.label}</p>
                 <p style={{ fontSize:28, fontWeight:800, color:s.color }}>{s.value}</p>
               </div>
               <div className="stat-icon" style={{ background:s.bg, color:s.color, fontSize:22 }}>{s.icon}</div>
@@ -151,10 +151,10 @@ export default function WellnessDashboard() {
                             : p.category === 'physical'
                             ? 'var(--success)'
                             : p.category === 'financial'
-                            ? 'var(--warning)'
+                            ? 'var(--color-warning)'
                             : p.category === 'eap'
-                            ? 'var(--danger)'
-                            : 'var(--primary)',
+                            ? 'var(--color-danger)'
+                            : 'var(--color-primary)',
                       }}
                     />
 
@@ -171,33 +171,33 @@ export default function WellnessDashboard() {
                       <h3 style={{ fontSize:15, fontWeight:700 }}>{p.title}</h3>
 
                       {p.description && (
-                        <p style={{ fontSize:12, color:'var(--text-muted)', lineHeight:1.5 }}>{p.description}</p>
+                        <p style={{ fontSize:12, color:'var(--color-text-muted)', lineHeight:1.5 }}>{p.description}</p>
                       )}
 
-                      <div style={{ display:'flex', flexWrap:'wrap', gap:8, fontSize:12, color:'var(--text-muted)' }}>
+                      <div style={{ display:'flex', flexWrap:'wrap', gap:8, fontSize:12, color:'var(--color-text-muted)' }}>
                         {p.provider && <span>🏢 {p.provider}</span>}
                         <span>👥 {p.enrollments?.length||0}/{p.maxCapacity} enrolled</span>
-                        {spots <= 5 && spots > 0 && <span style={{ color:'var(--warning)', fontWeight:600 }}>⚡ {spots} spots left</span>}
-                        {isFull && <span style={{ color:'var(--danger)', fontWeight:600 }}>🚫 Full</span>}
+                        {spots <= 5 && spots > 0 && <span style={{ color:'var(--color-warning)', fontWeight:600 }}>⚡ {spots} spots left</span>}
+                        {isFull && <span style={{ color:'var(--color-danger)', fontWeight:600 }}>🚫 Full</span>}
                       </div>
 
                       {/* Tags */}
                       {p.tags?.length > 0 && (
                         <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
                           {p.tags.map(t => (
-                            <span key={t} style={{ background:'var(--surface-2)', color:'var(--text-muted)', borderRadius:20, padding:'2px 8px', fontSize:11 }}>{t}</span>
+                            <span key={t} style={{ background:'var(--col)', color:'var(--color-text-muted)', borderRadius:20, padding:'2px 8px', fontSize:11 }}>{t}</span>
                           ))}
                         </div>
                       )}
 
                       {/* Enrollment status */}
                       {enrolled && enrData && (
-                        <div style={{ padding:'8px 12px', borderRadius:8, background: enrData.status==='completed' ? 'var(--success-light)' : 'var(--primary-light)', fontSize:12 }}>
+                        <div style={{ padding:'8px 12px', borderRadius:8, background: enrData.status==='completed' ? 'var(--color-success-bg)' : 'var(--color-info-bg)', fontSize:12 }}>
                           {enrData.status === 'completed'
                             ? <span style={{ color:'var(--success)', fontWeight:600 }}>✅ Completed {enrData.completedAt ? `on ${new Date(enrData.completedAt).toLocaleDateString('en-KE')}` : ''}</span>
-                            : <span style={{ color:'var(--primary)', fontWeight:600 }}>✔ Enrolled {enrData.enrolledAt ? `since ${new Date(enrData.enrolledAt).toLocaleDateString('en-KE')}` : ''}</span>
+                            : <span style={{ color:'var(--color-primary)', fontWeight:600 }}>✔ Enrolled {enrData.enrolledAt ? `since ${new Date(enrData.enrolledAt).toLocaleDateString('en-KE')}` : ''}</span>
                           }
-                          {enrData.feedback && <p style={{ color:'var(--text-muted)', marginTop:4 }}>"{enrData.feedback}"</p>}
+                          {enrData.feedback && <p style={{ color:'var(--color-text-muted)', marginTop:4 }}>"{enrData.feedback}"</p>}
                         </div>
                       )}
 
@@ -290,7 +290,7 @@ export default function WellnessDashboard() {
             </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Tags <span style={{ fontWeight:400, color:'var(--text-muted)' }}>(comma-separated)</span></label>
+            <label className="form-label">Tags <span style={{ fontWeight:400, color:'var(--color-text-muted)' }}>(comma-separated)</span></label>
             <input className="form-control" value={tagInput} onChange={e => setTagInput(e.target.value)} placeholder="e.g. stress, mindfulness, team" />
           </div>
         </form>

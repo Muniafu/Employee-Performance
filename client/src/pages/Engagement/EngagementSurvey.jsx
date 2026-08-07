@@ -76,8 +76,8 @@ export default function EngagementSurvey() {
                 <span className={`badge ${s.isActive?'badge-success':'badge-neutral'}`}>{s.isActive?'Active':'Closed'}</span>
               </div>
               <h3 style={{ fontSize:14, fontWeight:700 }}>{s.title}</h3>
-              {s.description && <p style={{ fontSize:12, color:'var(--text-muted)' }}>{s.description}</p>}
-              <div style={{ fontSize:11, color:'var(--text-muted)', display:'flex', gap:12 }}>
+              {s.description && <p style={{ fontSize:12, color:'var(--color-text-muted)' }}>{s.description}</p>}
+              <div style={{ fontSize:11, color:'var(--color-text-muted)', display:'flex', gap:12 }}>
                 <span>❓ {s.questions?.length||0} questions</span>
                 <span>📬 {s.responses?.length||0} responses</span>
                 {s.avgNps > 0 && <span>⭐ NPS: {Number(s.avgNps).toFixed(1)}</span>}
@@ -112,11 +112,11 @@ export default function EngagementSurvey() {
         >
           {activeSurvey.questions?.map((q, i) => (
             <div key={i} className="form-group">
-              <label className="form-label">{q.text} {q.required && <span style={{ color:'var(--danger)' }}>*</span>}</label>
+              <label className="form-label">{q.text} {q.required && <span style={{ color:'var(--color-danger)' }}>*</span>}</label>
               {q.type === 'rating'
                 ? <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                     <input type="range" min={1} max={10} value={answers[i]?.rating||5} onChange={e=>{ const a=[...answers]; a[i]={...a[i],rating:Number(e.target.value)}; setAnswers(a); }} style={{ flex:1 }} />
-                    <span style={{ fontWeight:700, fontSize:18, color:'var(--primary)', width:28 }}>{answers[i]?.rating||5}</span>
+                    <span style={{ fontWeight:700, fontSize:18, color:'var(--color-primary)', width:28 }}>{answers[i]?.rating||5}</span>
                   </div>
                 : q.type === 'boolean'
                   ? <div style={{ display:'flex', gap:16 }}>
@@ -130,7 +130,7 @@ export default function EngagementSurvey() {
             <label className="form-label">NPS: How likely are you to recommend this company? (0–10)</label>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <input type="range" min={0} max={10} value={nps} onChange={e=>setNps(Number(e.target.value))} style={{ flex:1 }} />
-              <span style={{ fontWeight:800, fontSize:22, color: nps>=9?'var(--success)':nps>=7?'var(--warning)':'var(--danger)', width:28 }}>{nps}</span>
+              <span style={{ fontWeight:800, fontSize:22, color: nps>=9?'var(--color-success)':nps>=7?'var(--color-warning)':'var(--color-danger)', width:28 }}>{nps}</span>
             </div>
           </div>
         </Modal>
@@ -141,17 +141,17 @@ export default function EngagementSurvey() {
         <Modal open onClose={() => setResults(null)} title={`Results — ${results.title}`}>
           <div style={{ marginBottom:16, display:'flex', gap:20 }}>
             <div style={{ textAlign:'center', flex:1 }}>
-              <div style={{ fontSize:40, fontWeight:800, color:'var(--primary)' }}>{results.avgNps||0}</div>
-              <div style={{ fontSize:12, color:'var(--text-muted)' }}>Avg NPS</div>
+              <div style={{ fontSize:40, fontWeight:800, color:'var(--color-primary)' }}>{results.avgNps||0}</div>
+              <div style={{ fontSize:12, color:'var(--color-text-muted)' }}>Avg NPS</div>
             </div>
             <div style={{ textAlign:'center', flex:1 }}>
               <div style={{ fontSize:40, fontWeight:800, color:'var(--success)' }}>{results.total||0}</div>
-              <div style={{ fontSize:12, color:'var(--text-muted)' }}>Responses</div>
+              <div style={{ fontSize:12, color:'var(--color-text-muted)' }}>Responses</div>
             </div>
           </div>
           {Object.entries(results.ratingsByQuestion||{}).map(([q, avg]) => (
             avg && <div key={q} style={{ padding:'8px 0', borderBottom:'1px solid var(--border)' }}>
-              <div style={{ fontSize:12, color:'var(--text-muted)', marginBottom:4 }}>{q}</div>
+              <div style={{ fontSize:12, color:'var(--color-text-muted)', marginBottom:4 }}>{q}</div>
               <div style={{ display:'flex', alignItems:'center', gap:10 }}>
                 <div className="progress-bar" style={{ flex:1 }}><div className="progress-fill" style={{ width:`${Number(avg)*10}%` }} /></div>
                 <strong style={{ fontSize:14, width:32 }}>{avg}</strong>
@@ -191,7 +191,7 @@ export default function EngagementSurvey() {
                 <select className="form-control form-select" value={q.type} onChange={e=>setQ(i,'type',e.target.value)} style={{ width:110 }}>
                   {['rating','text','boolean','choice'].map(t=><option key={t} value={t}>{t}</option>)}
                 </select>
-                {form.questions.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmQ(i)} style={{ color:'var(--danger)' }}>✕</button>}
+                {form.questions.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmQ(i)} style={{ color:'var(--color-danger)' }}>✕</button>}
               </div>
             ))}
           </div>

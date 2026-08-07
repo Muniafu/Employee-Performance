@@ -107,13 +107,13 @@ export default function CareerPathing() {
                     {/* Path Header */}
                     <div className="card-header">
                       <div style={{ display:'flex', alignItems:'center', gap:12, flex:1 }}>
-                        <div className="avatar" style={{ background:'var(--primary-light)', color:'var(--primary)' }}>
+                        <div className="avatar" style={{ background:'var(--color-info-bg)', color:'var(--color-primary)' }}>
                           {path.employee?.user?.firstName?.[0]}{path.employee?.user?.lastName?.[0]}
                         </div>
                         <div>
                           <div style={{ fontWeight:700, fontSize:14 }}>{empName || 'Me'}</div>
-                          <div style={{ fontSize:12, color:'var(--text-muted)' }}>
-                            {path.currentRole} <span style={{ color:'var(--primary)' }}>→</span> {path.targetRole}
+                          <div style={{ fontSize:12, color:'var(--color-text-muted)' }}>
+                            {path.currentRole} <span style={{ color:'var(--color-primary)' }}>→</span> {path.targetRole}
                             <span style={{ marginLeft:8 }}>· {path.timeline}</span>
                           </div>
                         </div>
@@ -132,12 +132,12 @@ export default function CareerPathing() {
 
                     {/* Progress bar */}
                     <div style={{ padding:'0 20px 0' }}>
-                      <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, color:'var(--text-muted)', marginTop:12, marginBottom:4 }}>
+                      <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, color:'var(--color-text-muted)', marginTop:12, marginBottom:4 }}>
                         <span>Milestones: {path.milestones?.filter(m=>m.completed).length||0}/{path.milestones?.length||0} completed</span>
-                        <span style={{ fontWeight:700, color: progress===100?'var(--success)':'var(--primary)' }}>{progress}%</span>
+                        <span style={{ fontWeight:700, color: progress===100?'var(--color-success)':'var(--color-primary)' }}>{progress}%</span>
                       </div>
                       <div className="progress-bar" style={{ marginBottom:16 }}>
-                        <div className="progress-fill" style={{ width:`${progress}%`, background: progress===100?'var(--success)':'var(--primary)' }} />
+                        <div className="progress-fill" style={{ width:`${progress}%`, background: progress===100?'var(--color-success)':'var(--color-primary)' }} />
                       </div>
                     </div>
 
@@ -147,36 +147,36 @@ export default function CareerPathing() {
                         <div className="grid-2" style={{ gap:20 }}>
                           {/* Milestones */}
                           <div>
-                            <h4 style={{ fontSize:13, fontWeight:700, marginBottom:12, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em' }}>Milestones</h4>
+                            <h4 style={{ fontSize:13, fontWeight:700, marginBottom:12, color:'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'.06em' }}>Milestones</h4>
                             {path.milestones?.length > 0
                               ? path.milestones.map((m, i) => (
                                   <div key={m._id||i} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'8px 0', borderBottom:'1px solid var(--border)' }}>
                                     <button
                                       onClick={() => !m.completed && handleCompleteMilestone(path._id, m._id)}
-                                      style={{ marginTop:2, width:20, height:20, borderRadius:'50%', border:`2px solid ${m.completed?'var(--success)':'var(--border-2)'}`, background: m.completed?'var(--success)':'transparent', color:'#fff', fontSize:11, display:'grid', placeItems:'center', flexShrink:0, cursor: m.completed?'default':'pointer' }}
+                                      style={{ marginTop:2, width:20, height:20, borderRadius:'50%', border:`2px solid ${m.completed?'var(--color-success)':'var(--color-border-2)'}`, background: m.completed?'var(--color-success)':'transparent', color:'#fff', fontSize:11, display:'grid', placeItems:'center', flexShrink:0, cursor: m.completed?'default':'pointer' }}
                                     >
                                       {m.completed ? '✓' : ''}
                                     </button>
                                     <div style={{ flex:1 }}>
-                                      <div style={{ fontSize:13, fontWeight:m.completed?400:600, textDecoration:m.completed?'line-through':'none', color:m.completed?'var(--text-muted)':'var(--text)' }}>{m.title}</div>
-                                      {m.description && <div style={{ fontSize:11, color:'var(--text-muted)' }}>{m.description}</div>}
-                                      {m.targetDate && <div style={{ fontSize:11, color:'var(--text-muted)' }}>🗓 {new Date(m.targetDate).toLocaleDateString('en-KE')}</div>}
-                                      {m.completed && m.completedAt && <div style={{ fontSize:11, color:'var(--success)' }}>✅ Done {new Date(m.completedAt).toLocaleDateString('en-KE')}</div>}
+                                      <div style={{ fontSize:13, fontWeight:m.completed?400:600, textDecoration:m.completed?'line-through':'none', color:m.completed?'var(--color-text-muted)':'var(--color-text)' }}>{m.title}</div>
+                                      {m.description && <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>{m.description}</div>}
+                                      {m.targetDate && <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>🗓 {new Date(m.targetDate).toLocaleDateString('en-KE')}</div>}
+                                      {m.completed && m.completedAt && <div style={{ fontSize:11, color:'var(--color-success)' }}>✅ Done {new Date(m.completedAt).toLocaleDateString('en-KE')}</div>}
                                     </div>
                                   </div>
                                 ))
-                              : <p style={{ fontSize:13, color:'var(--text-muted)' }}>No milestones set.</p>
+                              : <p style={{ fontSize:13, color:'var(--color-text-muted)' }}>No milestones set.</p>
                             }
                           </div>
 
                           {/* Skills */}
                           <div>
-                            <h4 style={{ fontSize:13, fontWeight:700, marginBottom:12, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em' }}>Skills</h4>
+                            <h4 style={{ fontSize:13, fontWeight:700, marginBottom:12, color:'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'.06em' }}>Skills</h4>
                             {path.skills?.length > 0
                               ? path.skills.map((s, i) => (
                                   <div key={i} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'6px 0', borderBottom:'1px solid var(--border)', fontSize:13 }}>
                                     <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                                      <span style={{ width:8, height:8, borderRadius:'50%', background: s.acquired?'var(--success)':'var(--border-2)', display:'inline-block', flexShrink:0 }} />
+                                      <span style={{ width:8, height:8, borderRadius:'50%', background: s.acquired?'var(--color-success)':'var(--color-border-2)', display:'inline-block', flexShrink:0 }} />
                                       <span style={{ fontWeight:500 }}>{s.name}</span>
                                     </div>
                                     <div style={{ display:'flex', gap:6 }}>
@@ -185,12 +185,12 @@ export default function CareerPathing() {
                                     </div>
                                   </div>
                                 ))
-                              : <p style={{ fontSize:13, color:'var(--text-muted)' }}>No skills listed.</p>
+                              : <p style={{ fontSize:13, color:'var(--color-text-muted)' }}>No skills listed.</p>
                             }
                           </div>
                         </div>
                         {path.notes && (
-                          <div style={{ marginTop:16, padding:'10px 14px', background:'var(--surface-2)', borderRadius:8, fontSize:13, color:'var(--text-muted)', fontStyle:'italic' }}>
+                          <div style={{ marginTop:16, padding:'10px 14px', background:'var(--color-bg-surface-raised)', borderRadius:8, fontSize:13, color:'var(--color-text-muted)', fontStyle:'italic' }}>
                             "{path.notes}"
                           </div>
                         )}
@@ -246,7 +246,7 @@ export default function CareerPathing() {
                 <label style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, whiteSpace:'nowrap', cursor:'pointer' }}>
                   <input type="checkbox" checked={s.acquired} onChange={e => setSkill(i,'acquired',e.target.checked)} /> Acquired
                 </label>
-                {form.skills.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmSkill(i)} style={{ color:'var(--danger)' }}>✕</button>}
+                {form.skills.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmSkill(i)} style={{ color:'var(--color-danger)' }}>✕</button>}
               </div>
             ))}
           </div>
@@ -262,7 +262,7 @@ export default function CareerPathing() {
                 <input className="form-control" placeholder="Title" value={m.title} onChange={e => setMilestone(i,'title',e.target.value)} />
                 <input className="form-control" placeholder="Description" value={m.description} onChange={e => setMilestone(i,'description',e.target.value)} />
                 <input className="form-control" type="date" value={m.targetDate} onChange={e => setMilestone(i,'targetDate',e.target.value)} style={{ width:150 }} />
-                {form.milestones.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmMilestone(i)} style={{ color:'var(--danger)' }}>✕</button>}
+                {form.milestones.length > 1 && <button type="button" className="btn btn-sm btn-ghost" onClick={() => rmMilestone(i)} style={{ color:'var(--color-danger)' }}>✕</button>}
               </div>
             ))}
           </div>

@@ -79,7 +79,7 @@ export default function TrainingModules() {
                     {c.isMandatory && <span className="badge badge-danger">Mandatory</span>}
                   </div>
                   <h3 style={{ fontSize:14, fontWeight:700 }}>{c.title}</h3>
-                  <div style={{ fontSize:12, color:'var(--text-muted)', display:'flex', gap:12 }}>
+                  <div style={{ fontSize:12, color:'var(--color-text-muted)', display:'flex', gap:12 }}>
                     <span>⏱ {c.duration}min</span>
                     <span>🏢 {c.provider}</span>
                     <span>🎯 Pass: {c.passingScore}%</span>
@@ -87,7 +87,7 @@ export default function TrainingModules() {
                   {enrolled && enr && (
                     <div>
                       <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, marginBottom:4 }}>
-                        <span style={{ textTransform:'capitalize', color:'var(--text-muted)' }}>{enr.status}</span>
+                        <span style={{ textTransform:'capitalize', color:'var(--color-text-muted)' }}>{enr.status}</span>
                         <span>{enr.progress}%</span>
                       </div>
                       <div className="progress-bar"><div className="progress-fill" style={{ width:`${enr.progress}%` }} /></div>
@@ -115,7 +115,7 @@ export default function TrainingModules() {
                 <h3 style={{ fontSize:14, fontWeight:700, marginBottom:8 }}>{c.title}</h3>
                 <div>
                   <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, marginBottom:4 }}>
-                    <span style={{ textTransform:'capitalize', color:'var(--text-muted)' }}>{c.myEnrollment?.status}</span>
+                    <span style={{ textTransform:'capitalize', color:'var(--color-text-muted)' }}>{c.myEnrollment?.status}</span>
                     <span>{c.myEnrollment?.progress}%</span>
                   </div>
                   <div className="progress-bar"><div className="progress-fill" style={{ width:`${c.myEnrollment?.progress||0}%` }} /></div>

@@ -76,14 +76,14 @@ export default function PerformanceReview() {
               <div className="avatar" style={{ width:28, height:28, fontSize:11 }}>{r.employee?.user?.firstName?.[0]}{r.employee?.user?.lastName?.[0]}</div>
               <div>
                 <div style={{ fontWeight:600, fontSize:13 }}>{r.employee?.user?.firstName} {r.employee?.user?.lastName}</div>
-                <div style={{ fontSize:11, color:'var(--text-muted)' }}>{r.employee?.department}</div>
+                <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>{r.employee?.department}</div>
               </div>
             </div>
           )},
           { label:'Period', key:'period' },
           { label:'Type', render: r => <span className="badge badge-neutral" style={{textTransform:'capitalize'}}>{r.reviewType}</span> },
-          { label:'Self Rating', render: r => r.selfRating ? <span style={{ color:'var(--warning)', fontSize:13 }}>{STAR(r.selfRating)}</span> : '—' },
-          { label:'Manager Rating', render: r => r.managerRating ? <span style={{ color:'var(--primary)', fontSize:13 }}>{STAR(r.managerRating)}</span> : '—' },
+          { label:'Self Rating', render: r => r.selfRating ? <span style={{ color:'var(--color-warning)', fontSize:13 }}>{STAR(r.selfRating)}</span> : '—' },
+          { label:'Manager Rating', render: r => r.managerRating ? <span style={{ color:'var(--color-primary)', fontSize:13 }}>{STAR(r.managerRating)}</span> : '—' },
           { label:'Goals', render: r => `${r.goals?.filter(g=>g.status==='completed').length||0}/${r.goals?.length||0} done` },
           { label:'Status', render: r => <span className={`badge ${STATUS_BADGE[r.status]||'badge-neutral'}`} style={{textTransform:'capitalize'}}>{r.status}</span> },
           { label:'', render: r => (
@@ -115,7 +115,7 @@ export default function PerformanceReview() {
           </div>
           <div className="form-group"><label className="form-label">Self Rating (1–5)</label>
             <input type="range" min={1} max={5} value={form.selfRating} onChange={e=>setForm(p=>({...p,selfRating:Number(e.target.value)}))} style={{ width:'100%' }} />
-            <p style={{ textAlign:'center', color:'var(--warning)', fontSize:16 }}>{STAR(form.selfRating)} ({form.selfRating}/5)</p>
+            <p style={{ textAlign:'center', color:'var(--color-warning)', fontSize:16 }}>{STAR(form.selfRating)} ({form.selfRating}/5)</p>
           </div>
           <div className="form-group"><label className="form-label">Key Strengths</label><textarea className="form-control" rows={2} value={form.strengths} onChange={e=>setForm(p=>({...p,strengths:e.target.value}))} placeholder="What are you excelling at?" /></div>
           <div className="form-group"><label className="form-label">Areas for Improvement</label><textarea className="form-control" rows={2} value={form.improvements} onChange={e=>setForm(p=>({...p,improvements:e.target.value}))} placeholder="Where can you grow?" /></div>
@@ -132,7 +132,7 @@ export default function PerformanceReview() {
             </button>
           </>}
         >
-          <div style={{ marginBottom:16, padding:12, background:'var(--surface-2)', borderRadius:8, fontSize:13 }}>
+          <div style={{ marginBottom:16, padding:12, background:'var(--color-bg-surface-raised)', borderRadius:8, fontSize:13 }}>
             <strong>Employee self-assessment:</strong><br/>
             Rating: {STAR(showReview.selfRating||0)}<br/>
             Strengths: {showReview.strengths||'—'}<br/>
@@ -140,7 +140,7 @@ export default function PerformanceReview() {
           </div>
           <div className="form-group"><label className="form-label">Manager Rating (1–5)</label>
             <input type="range" min={1} max={5} value={revForm.managerRating} onChange={e=>setRevForm(p=>({...p,managerRating:Number(e.target.value),overallRating:Number(e.target.value)}))} style={{ width:'100%' }} />
-            <p style={{ textAlign:'center', color:'var(--primary)', fontSize:16 }}>{STAR(revForm.managerRating)} ({revForm.managerRating}/5)</p>
+            <p style={{ textAlign:'center', color:'var(--color-primary)', fontSize:16 }}>{STAR(revForm.managerRating)} ({revForm.managerRating}/5)</p>
           </div>
           <div className="form-group"><label className="form-label">Manager Comment</label><textarea className="form-control" rows={3} value={revForm.managerComment} onChange={e=>setRevForm(p=>({...p,managerComment:e.target.value}))} placeholder="Feedback for the employee…" /></div>
         </Modal>

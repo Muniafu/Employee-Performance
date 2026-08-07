@@ -106,7 +106,7 @@ export default function LeaveRequests() {
 
       <div className="card">
         <div className="card-header">
-          <span className="card-title">Leave Records <span style={{ color:'var(--text-muted)', fontWeight:400, fontSize:13 }}>({leaves.length})</span></span>
+          <span className="card-title">Leave Records <span style={{ color:'var(--color-text-muted)', fontWeight:400, fontSize:13 }}>({leaves.length})</span></span>
         </div>
         <Table loading={loading} data={leaves} columns={[
           { label:'Employee', render: l => (
@@ -114,15 +114,15 @@ export default function LeaveRequests() {
               <div className="avatar" style={{ width:28, height:28, fontSize:11 }}>{l.employee?.user?.firstName?.[0]}{l.employee?.user?.lastName?.[0]}</div>
               <div>
                 <div style={{ fontWeight:600, fontSize:13 }}>{l.employee?.user?.firstName} {l.employee?.user?.lastName}</div>
-                <div style={{ fontSize:11, color:'var(--text-muted)' }}>{l.employee?.department}</div>
+                <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>{l.employee?.department}</div>
               </div>
             </div>
           )},
           { label:'Type', render: l => <span className="badge badge-primary" style={{ textTransform:'capitalize' }}>{l.leaveType}</span> },
-          { label:'Dates', render: l => <div><div style={{fontSize:12}}>{fmtDate(l.startDate)}</div><div style={{fontSize:11,color:'var(--text-muted)'}}>→ {fmtDate(l.endDate)}</div></div> },
+          { label:'Dates', render: l => <div><div style={{fontSize:12}}>{fmtDate(l.startDate)}</div><div style={{fontSize:11,color:'var(--color-text-muted)'}}>→ {fmtDate(l.endDate)}</div></div> },
           { label:'Days', render: l => <strong>{l.totalDays}</strong> },
           { label:'Status', render: l => <span className={`badge ${STATUS_BADGE[l.status]||'badge-neutral'}`} style={{ textTransform:'capitalize' }}>{l.status}</span> },
-          { label:'Reason', render: l => <span style={{ fontSize:12, color:'var(--text-muted)', maxWidth:150, display:'block', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{l.reason||'—'}</span> },
+          { label:'Reason', render: l => <span style={{ fontSize:12, color:'var(--color-text-muted)', maxWidth:150, display:'block', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{l.reason||'—'}</span> },
           { label:'Actions', render: l => (
             <div style={{ display:'flex', gap:6 }}>
               {canManage && l.status==='pending' && <>
@@ -162,13 +162,13 @@ export default function LeaveRequests() {
             </div>
           </div>
           {workDays() > 0 && (
-            <div style={{ background:'var(--primary-light)', borderRadius:8, padding:'10px 14px', marginBottom:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-              <span style={{ fontSize:13, color:'var(--primary)' }}>Working days requested</span>
-              <strong style={{ fontSize:20, color:'var(--primary)' }}>{workDays()}</strong>
+            <div style={{ background:'var(--color-info-bg)', borderRadius:8, padding:'10px 14px', marginBottom:12, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <span style={{ fontSize:13, color:'var(--color-primary)' }}>Working days requested</span>
+              <strong style={{ fontSize:20, color:'var(--color-primary)' }}>{workDays()}</strong>
             </div>
           )}
           <div className="form-group">
-            <label className="form-label">Reason <span style={{ fontWeight:400, color:'var(--text-muted)' }}>(optional)</span></label>
+            <label className="form-label">Reason <span style={{ fontWeight:400, color:'var(--color-text-muted)' }}>(optional)</span></label>
             <textarea className="form-control" rows={3} maxLength={500} value={form.reason} onChange={e=>setForm(p=>({...p,reason:e.target.value}))} placeholder="Brief reason…" />
           </div>
         </form>

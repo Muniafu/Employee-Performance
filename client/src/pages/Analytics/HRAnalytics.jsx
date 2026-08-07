@@ -76,7 +76,7 @@ export default function HRAnalytics() {
           >
             <BarChart3
               size={28}
-              color="var(--primary)"
+              color="var(--color-primary)"
             />
 
             <h1 className="page-title">
@@ -98,38 +98,38 @@ export default function HRAnalytics() {
             label: 'Total Employees',
             value: headcount?.total,
             icon: <Users size={20} />,
-            color: 'var(--primary)',
-            bg: 'var(--primary-light)'
+            color: 'var(--color-primary)',
+            bg: 'var(--color-info-bg)'
           },
 
           {
             label: 'Active',
             value: headcount?.active,
             icon: <CheckCircle2 size={20} />,
-            color: 'var(--success)',
-            bg: 'var(--success-light)'
+            color: 'var(--color-success)',
+            bg: 'var(--color-success-bg)'
           },
 
           {
             label: 'On Leave',
             value: headcount?.onLeave,
             icon: <Plane size={20} />,
-            color: 'var(--warning)',
-            bg: 'var(--warning-light)'
+            color: 'var(--color-warning)',
+            bg: 'var(--color-warning-bg)'
           },
 
           {
             label: 'Turnover Rate',
             value: turnover?.turnoverRate,
             icon: <TrendingDown size={20} />,
-            color: 'var(--danger)',
-            bg: 'var(--danger-light)'
+            color: 'var(--color-danger)',
+            bg: 'var(--color-danger-bg)'
           },
         ].map(s => (
           <div key={s.label} className="stat-card">
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
               <div>
-                <p style={{ fontSize:11, fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:6 }}>{s.label}</p>
+                <p style={{ fontSize:11, fontWeight:700, color:'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'.06em', marginBottom:6 }}>{s.label}</p>
                 <p style={{ fontSize:28, fontWeight:800, color:s.color }}>{s.value ?? '—'}</p>
               </div>
               <div className="stat-icon" style={{ background:s.bg, color:s.color }}>{s.icon}</div>
@@ -150,7 +150,7 @@ export default function HRAnalytics() {
                   <XAxis dataKey="name" tick={{ fontSize:11 }} />
                   <YAxis tick={{ fontSize:11 }} />
                   <Tooltip contentStyle={{ borderRadius:8, fontSize:12, border:'1px solid var(--border)' }} />
-                  <Bar dataKey="value" fill="var(--primary)" radius={[4,4,0,0]} name="Employees" />
+                  <Bar dataKey="value" fill="var(--color-primary)" radius={[4,4,0,0]} name="Employees" />
                 </BarChart>
               </ResponsiveContainer>
             ) : <div className="empty-state" style={{ padding:'20px 0' }}><p>No department data available.</p></div>}
@@ -186,13 +186,13 @@ export default function HRAnalytics() {
                   <span style={{ fontSize:13, textTransform:'capitalize' }}>{b._id||'Unknown'}</span>
                   <div style={{ display:'flex', gap:16, fontSize:13 }}>
                     <span><strong>{b.count}</strong> records</span>
-                    {b.avgHours && <span style={{ color:'var(--text-muted)' }}>{Number(b.avgHours).toFixed(1)}h avg</span>}
+                    {b.avgHours && <span style={{ color:'var(--color-text-muted)' }}>{Number(b.avgHours).toFixed(1)}h avg</span>}
                   </div>
                 </div>
               ))
             ) : <div className="empty-state" style={{ padding:'20px 0' }}><p>No attendance data for this period.</p></div>}
             {dash?.attendance?.lateCount != null && (
-              <div style={{ marginTop:12, padding:'8px 12px', background:'var(--warning-light)', borderRadius:8, fontSize:12, color:'var(--warning)' }}>
+              <div style={{ marginTop:12, padding:'8px 12px', background:'var(--color-warning-bg)', borderRadius:8, fontSize:12, color:'var(--color-warning)' }}>
                 <div
                   style={{
                     display: 'flex',
@@ -223,7 +223,7 @@ export default function HRAnalytics() {
                     <span className="badge badge-neutral" style={{textTransform:'capitalize'}}>{b._id}</span>
                     <span><strong>{b.count}</strong> employees</span>
                   </div>
-                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:4, fontSize:12, color:'var(--text-muted)' }}>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:4, fontSize:12, color:'var(--color-text-muted)' }}>
                     <span>Gross: KES {Number(b.totalGross||0).toLocaleString()}</span>
                     <span>Net: KES {Number(b.totalNet||0).toLocaleString()}</span>
                     <span>Avg Net: KES {Number(b.avgNet||0).toLocaleString()}</span>
@@ -239,9 +239,9 @@ export default function HRAnalytics() {
         <div className="card">
           <div className="card-header"><span className="card-title">Engagement Score</span></div>
           <div className="card-body" style={{ textAlign:'center', padding:'30px 20px' }}>
-            <div style={{ fontSize:64, fontWeight:800, color:'var(--primary)', lineHeight:1 }}>{dash?.engagement?.avgNps || 0}</div>
-            <div style={{ fontSize:13, color:'var(--text-muted)', marginTop:8 }}>Average NPS Score (0–10)</div>
-            <div style={{ marginTop:16, padding:'10px', background:'var(--surface-2)', borderRadius:8, fontSize:13 }}>
+            <div style={{ fontSize:64, fontWeight:800, color:'var(--color-primary)', lineHeight:1 }}>{dash?.engagement?.avgNps || 0}</div>
+            <div style={{ fontSize:13, color:'var(--color-text-muted)', marginTop:8 }}>Average NPS Score (0–10)</div>
+            <div style={{ marginTop:16, padding:'10px', background:'var(--color-bg-surface-raised)', borderRadius:8, fontSize:13 }}>
               {dash?.engagement?.totalSurveys || 0} active surveys running
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function HRAnalytics() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 8,
-                      color: 'var(--success)'
+                      color: 'var(--color-success)'
                     }}
                   >
                     <PartyPopper size={18} />
@@ -273,7 +273,7 @@ export default function HRAnalytics() {
                   </div>
                 </div>
             }
-            <div style={{ marginTop:12, padding:'8px 12px', background:'var(--primary-light)', borderRadius:8, fontSize:12, color:'var(--primary)' }}>
+            <div style={{ marginTop:12, padding:'8px 12px', background:'var(--color-info-bg)', borderRadius:8, fontSize:12, color:'var(--color-primary)' }}>
               Overall turnover rate: <strong>{turnover?.turnoverRate || '0%'}</strong> ({turnover?.terminated||0} of {turnover?.total||0} employees)
             </div>
           </div>

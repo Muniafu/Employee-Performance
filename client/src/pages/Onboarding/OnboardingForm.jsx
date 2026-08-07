@@ -86,7 +86,7 @@ export default function OnboardingForm() {
         onClick={() => canComplete && !task.completed && handleCompleteTask(task._id)}
         style={{
           marginTop:2, width:22, height:22, borderRadius:6,
-          border:`2px solid ${task.completed ? 'var(--success)' : task.required ? 'var(--primary)' : 'var(--border-2)'}`,
+          border:`2px solid ${task.completed ? 'var(--success)' : task.required ? 'var(--color-primary)' : 'var(--border-2)'}`,
           background: task.completed ? 'var(--success)' : 'transparent',
           color:'#fff', fontSize:12, display:'grid', placeItems:'center',
           flexShrink:0, cursor: canComplete && !task.completed ? 'pointer' : 'default',
@@ -98,10 +98,10 @@ export default function OnboardingForm() {
       <div style={{ flex:1 }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
           <div>
-            <span style={{ fontSize:13, fontWeight: task.completed ? 400 : 600, textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--text-muted)' : 'var(--text)' }}>
+            <span style={{ fontSize:13, fontWeight: task.completed ? 400 : 600, textDecoration: task.completed ? 'line-through' : 'none', color: task.completed ? 'var(--color-text-muted)' : 'var(--color-text)' }}>
               {CAT_ICON[task.category]||'📌'} {task.title}
             </span>
-            {task.description && <p style={{ fontSize:11, color:'var(--text-muted)', marginTop:2 }}>{task.description}</p>}
+            {task.description && <p style={{ fontSize:11, color:'var(--color-text-muted)', marginTop:2 }}>{task.description}</p>}
           </div>
           <div style={{ display:'flex', gap:6, flexShrink:0 }}>
             {task.required && <span className="badge badge-danger" style={{ fontSize:10 }}>Required</span>}
@@ -155,13 +155,13 @@ export default function OnboardingForm() {
                             <div key={phase} style={{ display:'flex', alignItems:'center', flex: i < PHASE_STEPS.length-1 ? 1 : 'none' }}>
                               <div style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:4, minWidth:90 }}>
                                 <div style={{ width:32, height:32, borderRadius:'50%', display:'grid', placeItems:'center', fontWeight:700, fontSize:13,
-                                  background: isDone ? 'var(--success)' : isNow ? 'var(--primary)' : 'var(--surface-2)',
-                                  color: isDone || isNow ? '#fff' : 'var(--text-muted)',
-                                  border: `2px solid ${isDone ? 'var(--success)' : isNow ? 'var(--primary)' : 'var(--border-2)'}`,
+                                  background: isDone ? 'var(--success)' : isNow ? 'var(--color-primary)' : 'var(--color-bg-surface-raised)',
+                                  color: isDone || isNow ? '#fff' : 'var(--color-text-muted)',
+                                  border: `2px solid ${isDone ? 'var(--success)' : isNow ? 'var(--color-primary)' : 'var(--border-2)'}`,
                                 }}>
                                   {isDone ? '✓' : i+1}
                                 </div>
-                                <div style={{ fontSize:10, fontWeight:600, color: isNow ? 'var(--primary)' : 'var(--text-muted)', textAlign:'center', whiteSpace:'nowrap' }}>
+                                <div style={{ fontSize:10, fontWeight:600, color: isNow ? 'var(--color-primary)' : 'var(--color-text-muted)', textAlign:'center', whiteSpace:'nowrap' }}>
                                   {PHASE_LABEL[phase]}
                                 </div>
                               </div>
@@ -178,14 +178,14 @@ export default function OnboardingForm() {
                     <div className="card card-body" style={{ marginBottom:20 }}>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
                         <span style={{ fontSize:14, fontWeight:700 }}>Overall Progress</span>
-                        <span style={{ fontSize:20, fontWeight:800, color: myOnboarding.progress===100 ? 'var(--success)' : 'var(--primary)' }}>
+                        <span style={{ fontSize:20, fontWeight:800, color: myOnboarding.progress===100 ? 'var(--success)' : 'var(--color-primary)' }}>
                           {myOnboarding.progress}%
                         </span>
                       </div>
                       <div className="progress-bar" style={{ height:10 }}>
-                        <div className="progress-fill" style={{ width:`${myOnboarding.progress}%`, background: myOnboarding.progress===100 ? 'var(--success)' : 'var(--primary)' }} />
+                        <div className="progress-fill" style={{ width:`${myOnboarding.progress}%`, background: myOnboarding.progress===100 ? 'var(--success)' : 'var(--color-primary)' }} />
                       </div>
-                      <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:'var(--text-muted)', marginTop:8 }}>
+                      <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:'var(--color-text-muted)', marginTop:8 }}>
                         <span>{myOnboarding.tasks?.filter(t=>t.completed).length||0} of {myOnboarding.tasks?.length||0} tasks done</span>
                         <span>Started {new Date(myOnboarding.startDate).toLocaleDateString('en-KE')}</span>
                       </div>
@@ -234,15 +234,15 @@ export default function OnboardingForm() {
                               <div className="avatar avatar-lg">{ob.employee?.user?.firstName?.[0]}{ob.employee?.user?.lastName?.[0]}</div>
                               <div>
                                 <div style={{ fontWeight:700, fontSize:15 }}>{empName}</div>
-                                <div style={{ fontSize:12, color:'var(--text-muted)' }}>
+                                <div style={{ fontSize:12, color:'var(--color-text-muted)' }}>
                                   {ob.employee?.department} · Started {new Date(ob.startDate).toLocaleDateString('en-KE')}
                                 </div>
                               </div>
                             </div>
                             <div style={{ display:'flex', alignItems:'center', gap:16 }}>
                               <div style={{ textAlign:'center' }}>
-                                <div style={{ fontSize:20, fontWeight:800, color: ob.progress===100?'var(--success)':'var(--primary)' }}>{ob.progress}%</div>
-                                <div style={{ fontSize:11, color:'var(--text-muted)' }}>{done}/{total} tasks</div>
+                                <div style={{ fontSize:20, fontWeight:800, color: ob.progress===100?'var(--success)':'var(--color-primary)' }}>{ob.progress}%</div>
+                                <div style={{ fontSize:11, color:'var(--color-text-muted)' }}>{done}/{total} tasks</div>
                               </div>
                               <span className={`badge ${ob.phase==='completed'?'badge-success':ob.phase==='first_day'?'badge-warning':'badge-primary'}`} style={{ textTransform:'capitalize' }}>
                                 {PHASE_LABEL[ob.phase]||ob.phase}
@@ -250,7 +250,7 @@ export default function OnboardingForm() {
                             </div>
                           </div>
                           <div className="progress-bar" style={{ marginTop:12 }}>
-                            <div className="progress-fill" style={{ width:`${ob.progress}%`, background: ob.progress===100?'var(--success)':'var(--primary)' }} />
+                            <div className="progress-fill" style={{ width:`${ob.progress}%`, background: ob.progress===100?'var(--success)':'var(--color-primary)' }} />
                           </div>
                         </div>
                       );

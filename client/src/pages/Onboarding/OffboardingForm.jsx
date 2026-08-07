@@ -89,7 +89,7 @@ export default function OffboardingForm() {
         <div className="card card-body" style={{ textAlign:'center', padding:'60px 40px' }}>
           <div style={{ fontSize:64, marginBottom:16 }}>✅</div>
           <h2 style={{ fontWeight:800, fontSize:22, marginBottom:8 }}>Offboarding Complete</h2>
-          <p style={{ color:'var(--text-muted)', marginBottom:24 }}>
+          <p style={{ color:'var(--color-text-muted)', marginBottom:24 }}>
             The employee account has been deactivated and all {totalDone} checklist items are recorded.
           </p>
           <button className="btn btn-primary" onClick={() => { setDone(false); setStep(1); setForm({ employeeId:'', exitDate:'', reason:'Resignation', notes:'', handoverTo:'', exitInterviewNotes:'' }); const init={}; OFFBOARD_CHECKLIST.forEach(t=>{ init[t.id]=false; }); setChecked(init); }}>
@@ -120,14 +120,14 @@ export default function OffboardingForm() {
         {[['1','Exit Details'],['2','Checklist'],['3','Confirm & Close']].map(([n, label], i) => (
           <div key={n} onClick={() => i+1 < step && setStep(i+1)}
             style={{ flex:1, padding:'12px 20px', display:'flex', alignItems:'center', gap:10,
-              background: step===i+1 ? 'var(--primary)' : step>i+1 ? 'var(--success-light)' : 'transparent',
-              color: step===i+1 ? '#fff' : step>i+1 ? 'var(--success)' : 'var(--text-muted)',
+              background: step===i+1 ? 'var(--color-primary)' : step>i+1 ? 'var(--color-success-bg)' : 'transparent',
+              color: step===i+1 ? '#fff' : step>i+1 ? 'var(--success)' : 'var(--color-text-muted)',
               cursor: step>i+1 ? 'pointer' : 'default',
               borderRight: i<2 ? '1px solid var(--border)' : 'none',
               transition:'all .2s',
             }}>
             <div style={{ width:24, height:24, borderRadius:'50%', display:'grid', placeItems:'center', fontSize:12, fontWeight:800,
-              background: step===i+1 ? 'rgba(255,255,255,.25)' : step>i+1 ? 'var(--success)' : 'var(--surface-2)',
+              background: step===i+1 ? 'rgba(255,255,255,.25)' : step>i+1 ? 'var(--success)' : 'var(--color-bg-surface-raised)',
               color: step>i+1 ? '#fff' : 'inherit',
             }}>
               {step>i+1 ? '✓' : n}
@@ -191,7 +191,7 @@ export default function OffboardingForm() {
         <div>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
             <div>
-              <p style={{ fontSize:13, color:'var(--text-muted)' }}>{totalDone} of {OFFBOARD_CHECKLIST.length} tasks completed</p>
+              <p style={{ fontSize:13, color:'var(--color-text-muted)' }}>{totalDone} of {OFFBOARD_CHECKLIST.length} tasks completed</p>
               <div className="progress-bar" style={{ width:200, marginTop:4 }}>
                 <div className="progress-fill" style={{ width:`${(totalDone/OFFBOARD_CHECKLIST.length)*100}%` }} />
               </div>
@@ -202,7 +202,7 @@ export default function OffboardingForm() {
             <div key={cat} className="card" style={{ marginBottom:16 }}>
               <div className="card-header">
                 <span className="card-title">{cat}</span>
-                <span style={{ fontSize:12, color:'var(--text-muted)' }}>
+                <span style={{ fontSize:12, color:'var(--color-text-muted)' }}>
                   {tasks.filter(t=>checked[t.id]).length}/{tasks.length} done
                 </span>
               </div>
@@ -213,11 +213,11 @@ export default function OffboardingForm() {
                       type="checkbox"
                       checked={checked[task.id]||false}
                       onChange={() => toggleCheck(task.id)}
-                      style={{ marginTop:3, width:16, height:16, cursor:'pointer', accentColor:'var(--primary)' }}
+                      style={{ marginTop:3, width:16, height:16, cursor:'pointer', accentColor:'var(--color-primary)' }}
                     />
                     <div style={{ flex:1 }}>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
-                        <span style={{ fontSize:13, fontWeight: checked[task.id] ? 400 : 600, textDecoration: checked[task.id] ? 'line-through' : 'none', color: checked[task.id] ? 'var(--text-muted)' : 'var(--text)' }}>
+                        <span style={{ fontSize:13, fontWeight: checked[task.id] ? 400 : 600, textDecoration: checked[task.id] ? 'line-through' : 'none', color: checked[task.id] ? 'var(--color-text-muted)' : 'var(--color-text)' }}>
                           {task.label}
                         </span>
                         <div style={{ display:'flex', gap:6, flexShrink:0, marginLeft:12 }}>
@@ -225,7 +225,7 @@ export default function OffboardingForm() {
                           <span className="badge badge-neutral" style={{ fontSize:10 }}>{task.assignedTo}</span>
                         </div>
                       </div>
-                      <p style={{ fontSize:11, color:'var(--text-muted)', marginTop:2 }}>{task.description}</p>
+                      <p style={{ fontSize:11, color:'var(--color-text-muted)', marginTop:2 }}>{task.description}</p>
                     </div>
                   </div>
                 ))}
@@ -253,9 +253,9 @@ export default function OffboardingForm() {
         <div className="card card-body">
           <h3 style={{ fontSize:15, fontWeight:700, marginBottom:20 }}>Confirm Offboarding</h3>
 
-          <div style={{ padding:'16px', background:'var(--danger-light)', borderRadius:10, marginBottom:20 }}>
-            <p style={{ fontSize:14, fontWeight:700, color:'var(--danger)', marginBottom:4 }}>⚠️ This action is irreversible</p>
-            <p style={{ fontSize:13, color:'var(--danger)' }}>The employee's account will be deactivated immediately. They will no longer be able to log in.</p>
+          <div style={{ padding:'16px', background:'var(--color-danger-bg)', borderRadius:10, marginBottom:20 }}>
+            <p style={{ fontSize:14, fontWeight:700, color:'var(--color-danger)', marginBottom:4 }}>⚠️ This action is irreversible</p>
+            <p style={{ fontSize:13, color:'var(--color-danger)' }}>The employee's account will be deactivated immediately. They will no longer be able to log in.</p>
           </div>
 
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 24px', fontSize:13, marginBottom:20 }}>
@@ -268,7 +268,7 @@ export default function OffboardingForm() {
               ['Required Tasks', requiredDone ? '✅ All done' : '❌ Incomplete'],
             ].map(([l,v]) => (
               <div key={l}>
-                <span style={{ color:'var(--text-muted)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</span>
+                <span style={{ color:'var(--color-text-muted)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'.05em' }}>{l}</span>
                 <p style={{ fontWeight:600, marginTop:2 }}>{v||'—'}</p>
               </div>
             ))}
