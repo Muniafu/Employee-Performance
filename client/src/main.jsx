@@ -4,7 +4,16 @@ import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import './styles/variables.css';
 import './styles/global.css';
+import './styles/animations.css';
+import './styles/forms.css';
+import './styles/tables.css';
+import './styles/navbar.css';
+import './styles/sidebar.css';
+import './styles/dashboard.css';
+import './styles/auth.css';
+import './styles/responsive.css';
 
 import App from './App.jsx';
 
@@ -30,7 +39,6 @@ ReactDOM.createRoot(
               newestOnTop
               closeOnClick
               pauseOnHover
-              theme="light"
             />
           </NotificationProvider>
         </EmployeeProvider>
