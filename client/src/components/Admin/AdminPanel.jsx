@@ -212,7 +212,7 @@ export default function AdminPanel() {
               All Users{' '}
               <span
                 style={{
-                  color: 'var(--text-muted)',
+                  color: 'var(--color-text-muted)',
                   fontWeight: 400,
                   fontSize: 13
                 }}
@@ -221,18 +221,16 @@ export default function AdminPanel() {
               </span>
             </span>
 
-            <div style={{ display: 'flex', gap: 10 }}>
+            <div>
               <input
                 className="form-control"
                 placeholder="Search…"
-                style={{ width: 200 }}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
 
               <select
                 className="form-control form-select"
-                style={{ width: 140 }}
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
               >
@@ -243,7 +241,6 @@ export default function AdminPanel() {
                   <option
                     key={r}
                     value={r}
-                    style={{ textTransform: 'capitalize' }}
                   >
                     {r}
                   </option>
@@ -251,7 +248,6 @@ export default function AdminPanel() {
               </select>
               <select
                 className="form-control form-select"
-                style={{ width: 160 }}
                 value={statusFilter}
                 onChange={(e) =>
                   setStatusFilter(e.target.value)
@@ -287,34 +283,18 @@ export default function AdminPanel() {
               {
                 label: 'User',
                 render: (u) => (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10
-                    }}
-                  >
+                  <div className="employee-card">
                     <div className="avatar">
                       {u.firstName?.[0]}
                       {u.lastName?.[0]}
                     </div>
 
                     <div>
-                      <div
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 13
-                        }}
-                      >
+                      <div className="employee-name">
                         {u.firstName} {u.lastName}
                       </div>
 
-                      <div
-                        style={{
-                          fontSize: 11,
-                          color: 'var(--text-muted)'
-                        }}
-                      >
+                      <div className="employee-email">
                         {u.email}
                       </div>
                     </div>
@@ -326,12 +306,7 @@ export default function AdminPanel() {
                 label: 'Role',
                 render: (u) => (
                   <select
-                    className="form-control form-select"
-                    style={{
-                      width: 130,
-                      padding: '4px 8px',
-                      fontSize: 12
-                    }}
+                    className="form-control form-select role-select"
                     value={u.role}
                     onChange={(e) =>
                       handleRoleChange(u._id, e.target.value)
@@ -394,13 +369,7 @@ export default function AdminPanel() {
               {
                 label: 'Actions',
                 render: (u) => (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 8,
-                      flexWrap: 'wrap'
-                    }}
-                  >
+                  <div className="employee-card">
 
                     {u.status === 'PENDING' && (
                       <>
@@ -492,13 +461,7 @@ export default function AdminPanel() {
         <div className="grid-2">
           {depts.map((d) => (
             <div key={d._id} className="card card-body">
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
+              <div className="employee-card">
                 <div>
                   <h3
                     style={{
@@ -512,7 +475,7 @@ export default function AdminPanel() {
                   <p
                     style={{
                       fontSize: 12,
-                      color: 'var(--text-muted)'
+                      color: 'var(--color-text-muted)'
                     }}
                   >
                     Code: {d.code}
